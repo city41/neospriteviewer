@@ -90,12 +90,12 @@ function formTile(corners) {
     return (
         <div style={{ border: "1px solid grey", width: PIXEL_SIZE * 16, height: PIXEL_SIZE * 16 }}>
             <div key="topRow" style={{ width: 16 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-                {corners[0]}
                 {corners[1]}
+                {corners[0]}
             </div>
             <div key="bottomRow" style={{ width: 16 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-                {corners[2]}
                 {corners[3]}
+                {corners[2]}
             </div>
         </div>
     );
