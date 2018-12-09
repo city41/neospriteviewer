@@ -8,6 +8,7 @@ import { CData } from "../interfaces";
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
 setConfig({ pureSFC: true });
 
+import "./global.css";
 import styles from "./index.module.css";
 
 function getTileIndices(cData: CData | null) {
@@ -28,9 +29,10 @@ export default () => {
     console.log("cData", cData);
 
     return (
-        <div>
-            <Header />
-            <CDataLoader onLoad={setCData} />
+        <div className={styles.root}>
+            <Header className={styles.header}>
+                <CDataLoader onLoad={setCData} />
+            </Header>
 
             {getTileIndices(cData).map((t, i) => (
                 <Tile className={styles.tile} cData={cData} index={t} />

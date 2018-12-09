@@ -1,3 +1,15 @@
+.root {
+    margin-top: 40px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+}
+
 .tile {
     margin: 2px;
     display: inline-block;
