@@ -46,10 +46,14 @@
     opacity: 0;
     transition: opacity 0.5s;
     font-size: 0.95em;
+    height: 0;
+    overflow: hidden;
 }
 
 .howToGetAPair.shown {
     opacity: 1;
+    height: auto;
+    overflow: auto;
 }
 
 .howToGetAPair ul {

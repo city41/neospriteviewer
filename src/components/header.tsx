@@ -17,6 +17,9 @@ const Header: React.StatelessComponent<HeaderProps> = ({ className, loading, chi
             <div className={logoClasses} />
             <div className={styles.title}>sprite tile viewer</div>
             {children}
+            <a className={styles.githubContainer} href="https://github.com/city41/neospriteviewer">
+                <div className={styles.githubLogo} />
+            </a>
         </header>
     );
 };

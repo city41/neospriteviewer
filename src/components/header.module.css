@@ -39,3 +39,17 @@
         display: none;
     }
 }
+
+.githubContainer {
+    padding: 2px;
+    margin-left: auto;
+    margin-right: 8px;
+}
+
+.githubLogo {
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-image: url(/neospriteviewer/github.png);
+    background-size: cover;
+}
