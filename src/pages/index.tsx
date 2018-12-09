@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import classnames from "classnames";
 import { setConfig } from "react-hot-loader";
 import { Header } from "../components/header";
 import { Tile } from "../components/tile";
@@ -31,7 +32,7 @@ export default () => {
 
     const tileIndices = getTileIndices(cData);
 
-    const body = tileIndices ? tileIndices.map((t, i) => <Tile className={styles.tile} cData={cData} index={t} />) : <NullState />;
+    const tileContainerClasses = classnames(styles.tileContainer, { [styles.hasTiles]: !!tileIndices });
 
     return (
         <div className={styles.root}>
@@ -39,7 +40,12 @@ export default () => {
                 <CDataLoader onLoad={setCData} />
             </Header>
 
-            {body}
+            {!tileIndices && <NullState />}
+            <div className={tileContainerClasses}>
+                {(tileIndices || []).map((t, i) => (
+                    <Tile className={styles.tile} cData={cData} index={t} />
+                ))}
+            </div>
         </div>
     );
 };

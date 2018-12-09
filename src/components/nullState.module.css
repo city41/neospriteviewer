@@ -33,6 +33,22 @@
 }
 
 .howToGetAPair {
-    margin-top: 100px;
+    margin-top: 40px;
     max-width: 500px;
+    padding: 20px;
+    border: 1px dotted #658291;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.howToGetAPair.shown {
+    opacity: 1;
+}
+
+.howToGetAPair ul {
+    list-style-type: circle;
+}
+
+.howToGetAPair li {
+    margin-top: 16px;
 }

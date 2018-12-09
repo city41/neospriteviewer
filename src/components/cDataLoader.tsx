@@ -6,17 +6,47 @@ import { setConfig } from "react-hot-loader";
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
 setConfig({ pureSFC: true });
 
+import styles from "./cDataLoader.module.css";
+
 interface CDataLoaderProps {
     className?: string;
     onLoad: (cData: CData) => void;
 }
 
+function getCIndex(fileName: string) {
+    const regex = /.*[cC](\d).*/g;
+
+    const result = regex.exec(fileName);
+
+    if (result) {
+        return parseInt(result[1], 10);
+    } else {
+        return null;
+    }
+}
+
 function isC1File(file: File) {
-    const c1regex = /.*C\d.*/g;
+    const cIndex = getCIndex(file.name);
 
-    const index = file.name[file.name.length - 1];
+    return !!(cIndex && cIndex & 1);
+}
 
-    return !!(parseInt(index, 10) & 1);
+function areCRomFiles(files: FileList) {
+    return Array.from(files).every(file => !!getCIndex(file.name));
+}
+
+function areAProperPair(files: FileList) {
+    const firstIndex = getCIndex(files[0].name);
+    const secondIndex = getCIndex(files[1].name);
+
+    if (!firstIndex || !secondIndex) {
+        return false;
+    }
+
+    const minIndex = Math.min(firstIndex, secondIndex);
+    const maxIndex = Math.max(firstIndex, secondIndex);
+
+    return maxIndex - minIndex === 1;
 }
 
 const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, onLoad }) => {
@@ -27,8 +57,12 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
 
         const files = e.target.files;
 
-        if (!files || files.length !== 2) {
+        if (!files || files.length !== 2 || !areCRomFiles(files)) {
             return setStatusMessage("Please choose a pair of C ROM files");
+        }
+
+        if (!areAProperPair(files)) {
+            return setStatusMessage("Please choose a proper pair, see the help");
         }
 
         const fr = new FileReader();
@@ -37,7 +71,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
             const fr2 = new FileReader();
             fr2.onload = e2 => {
                 const c1Data = new Uint8Array((isC1File(files[0]) ? fr.result : fr2.result) as ArrayBuffer);
-                const c2Data = new Uint8Array((isC1File(files[0]) ? fr2.result : fr.result) as ArrayBuffer);
+                const c2Data = new Uint8Array((isC1File(files[1]) ? fr2.result : fr.result) as ArrayBuffer);
 
                 onLoad({ c1Data, c2Data });
             };
@@ -50,7 +84,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
     return (
         <div>
             <input type="file" onChange={onFilesChosen} multiple={true} />
-            {statusMessage}
+            <span className={styles.errorMessage}>{statusMessage}</span>
         </div>
     );
 };

@@ -4,11 +4,21 @@
 
 .header {
     position: fixed;
+    z-index: 10;
     top: 0;
     left: 0;
     right: 0;
     height: 40px;
     box-shadow: 4px 6px 10px 0px rgba(168, 168, 168, 0.64);
+}
+
+.tileContainer {
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tileContainer.hasTiles {
+    opacity: 1;
 }
 
 .tile {

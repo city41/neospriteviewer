@@ -21,8 +21,7 @@ const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     return [value, value, value, 255];
 });
 
-palette.unshift([255, 0, 0, 255 * 0.2]);
-console.log("palette", palette);
+palette.unshift([255, 0, 0, 255 * 0.25]);
 
 function getPixels(cData: CData, tileIndex: number) {
     const startIndex = tileIndex * 64;
