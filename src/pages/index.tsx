@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Header } from "../components/header";
 import { Tile } from "../components/tile";
 import { CDataLoader } from "../components/cDataLoader";
 import { CData } from "../interfaces";
@@ -26,7 +27,7 @@ export default () => {
 
     return (
         <div>
-            <h1>A Neo Geo Sprite Tile Viewer</h1>
+            <Header />
             <CDataLoader onLoad={setCData} />
 
             {getTileIndices(cData).map((t, i) => (
