@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Tile } from "../components/tile";
+import LazyLoad from "react-lazyload";
+import { Tile, TilePlaceholder } from "../components/tile";
 import { CDataLoader } from "../components/cDataLoader";
 import { CData } from "../interfaces";
 
@@ -15,8 +16,8 @@ function getTileIndices(cData: CData | null) {
 
     // one byte is 1/4th of 8 pixels, so essentially 2 pixels
     // c1 has half the tile data
-    // so... length / (256
-    const numTiles = Math.min(cData.c1Data.length / (256 / 2) / 2, 1000);
+    // so...
+    const numTiles = cData.c1Data.length / (256 / 2) / 2;
 
     console.log(numTiles, "numTiles");
 
@@ -33,7 +34,7 @@ export default () => {
             <CDataLoader onLoad={setCData} />
 
             {getTileIndices(cData).map((t, i) => (
-                <Tile key={i} className="tile" cData={cData} index={t} />
+                <Tile className="tile" cData={cData} index={t} />
             ))}
         </div>
     );

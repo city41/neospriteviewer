@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import Spinner from "react-spinkit";
 import classnames from "classnames";
 import { CData } from "../interfaces";
 
@@ -133,4 +134,13 @@ const Tile: React.StatelessComponent<RenderTileProps> = ({ className, cData, ind
     return <canvas className={classes} ref={canvasEl} />;
 };
 
-export { Tile };
+const TilePlaceholder: React.StatelessComponent<{}> = () => {
+    return (
+        <div className="tilePlaceholder">
+            <Spinner name="pulse" />
+        </div>
+    );
+};
+
+const MemoedTile = React.memo(Tile);
+export { MemoedTile as Tile, TilePlaceholder };
