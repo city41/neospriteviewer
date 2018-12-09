@@ -1,13 +1,8 @@
-.tile,
-.tilePlaceholder {
+.tile {
     margin: 2px;
     display: inline-block;
 
     width: 64px;
     height: 64px;
     image-rendering: pixelated;
-}
-
-.tilePlaceholder {
-    background-color: purple;
 }

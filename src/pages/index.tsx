@@ -8,7 +8,7 @@ import { CData } from "../interfaces";
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
 setConfig({ pureSFC: true });
 
-import "./index.css";
+import styles from "./index.module.css";
 
 function getTileIndices(cData: CData | null) {
     if (!cData) {
@@ -19,8 +19,6 @@ function getTileIndices(cData: CData | null) {
     // c1 has half the tile data
     // so...
     const numTiles = process.env.NODE_ENV === "production" ? cData.c1Data.length / (256 / 2) / 2 : 300;
-
-    console.log(numTiles, "numTiles");
 
     return new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
 }
@@ -35,7 +33,7 @@ export default () => {
             <CDataLoader onLoad={setCData} />
 
             {getTileIndices(cData).map((t, i) => (
-                <Tile className="tile" cData={cData} index={t} />
+                <Tile className={styles.tile} cData={cData} index={t} />
             ))}
         </div>
     );
