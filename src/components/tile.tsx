@@ -50,7 +50,7 @@ function getPixels(cData: CData, tileIndex: number) {
     return pixels;
 }
 
-function buildCorner(pixelStream, startIndex) {
+function buildCorner(pixelStream: number[][], startIndex: number): number[][][] {
     const rows = [];
     for (let y = 0; y < 8; ++y) {
         const cells = [];
@@ -69,7 +69,7 @@ function buildCorner(pixelStream, startIndex) {
     return rows;
 }
 
-function extractCorners(pixelStream) {
+function extractCorners(pixelStream: number[][]): number[][][][] {
     const cornerSize = 8 * 8;
 
     return [
@@ -80,7 +80,7 @@ function extractCorners(pixelStream) {
     ];
 }
 
-function placeData(imageData, corner) {
+function placeData(imageData: ImageData, corner: number[][][]) {
     for (let y = 0; y < CORNER_HEIGHT; ++y) {
         for (let x = 0; x < CORNER_WIDTH; ++x) {
             const index = (y * CORNER_WIDTH + x) * 4;
@@ -104,7 +104,7 @@ const CORNER_POSITIONS = [
     [8, 8]
 ];
 
-function renderTile(corners, context) {
+function renderTile(corners: number[][][][], context: CanvasRenderingContext2D) {
     corners.forEach((corner, i) => {
         const imageData = context.createImageData(CORNER_WIDTH, CORNER_HEIGHT);
         placeData(imageData, corner);
@@ -115,18 +115,22 @@ function renderTile(corners, context) {
 const Tile: React.StatelessComponent<RenderTileProps> = ({ className, cData, index }) => {
     if (!cData) return null;
 
-    const canvasEl = useRef(null);
+    const canvasEl = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        canvasEl.current.width = TILE_WIDTH;
-        canvasEl.current.height = TILE_HEIGHT;
+        if (canvasEl && canvasEl.current) {
+            const context = canvasEl.current.getContext("2d");
 
-        const context = canvasEl.current.getContext("2d");
+            if (context) {
+                canvasEl.current.width = TILE_WIDTH;
+                canvasEl.current.height = TILE_HEIGHT;
 
-        const pixelStream = getPixels(cData, index);
+                const pixelStream = getPixels(cData, index);
 
-        const corners = extractCorners(pixelStream);
-        const tile = renderTile(corners, context);
+                const corners = extractCorners(pixelStream);
+                const tile = renderTile(corners, context);
+            }
+        }
     });
 
     const classes = classnames(className);

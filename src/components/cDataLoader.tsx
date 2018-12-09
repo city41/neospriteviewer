@@ -11,7 +11,7 @@ interface CDataLoaderProps {
     onLoad: (cData: CData) => void;
 }
 
-function isC1File(file) {
+function isC1File(file: File) {
     const index = file.name[file.name.length - 1];
 
     return !!(parseInt(index, 10) & 1);
@@ -25,7 +25,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
 
         const files = e.target.files;
 
-        if (files.length !== 2) {
+        if (!files || files.length !== 2) {
             return setStatusMessage("Please choose a pair of C ROM files");
         }
 
@@ -34,8 +34,8 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
         fr.onload = e1 => {
             const fr2 = new FileReader();
             fr2.onload = e2 => {
-                const c1Data = new Uint8Array(isC1File(files[0]) ? e1.target.result : e2.target.result);
-                const c2Data = new Uint8Array(isC1File(files[0]) ? e2.target.result : e1.target.result);
+                const c1Data = new Uint8Array((isC1File(files[0]) ? fr.result : fr2.result) as ArrayBuffer);
+                const c2Data = new Uint8Array((isC1File(files[0]) ? fr2.result : fr.result) as ArrayBuffer);
 
                 onLoad({ c1Data, c2Data });
             };
