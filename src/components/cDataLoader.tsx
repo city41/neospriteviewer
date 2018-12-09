@@ -47,7 +47,9 @@ function areAProperPair(files: FileList) {
     const minIndex = Math.min(firstIndex, secondIndex);
     const maxIndex = Math.max(firstIndex, secondIndex);
 
-    return maxIndex - minIndex === 1;
+    // the pair has to be consecutive with the odd number coming first
+    // ie: C3,C4 is a valid pair, but C4,C5 is not
+    return maxIndex - minIndex === 1 && !!(minIndex & 1);
 }
 
 const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, onLoad, cData }) => {
