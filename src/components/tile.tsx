@@ -112,10 +112,10 @@ function renderTile(corners: number[][][][], context: CanvasRenderingContext2D) 
     });
 }
 
-const Tile: React.StatelessComponent<RenderTileProps> = ({ className, cData, index }) => {
+const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, index }) => {
     if (!cData) return null;
 
-    const canvasEl = useRef<HTMLCanvasElement>(null);
+    const canvasEl = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
         if (canvasEl && canvasEl.current) {
@@ -137,5 +137,10 @@ const Tile: React.StatelessComponent<RenderTileProps> = ({ className, cData, ind
     return <canvas className={classes} ref={canvasEl} />;
 };
 
-const MemoedTile = React.memo(Tile);
-export { MemoedTile as Tile };
+let Tile = TileCmp;
+
+if (process.env.NODE_ENV === "production") {
+    Tile = React.memo(TileCmp);
+}
+
+export { Tile };
