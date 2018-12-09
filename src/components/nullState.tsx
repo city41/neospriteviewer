@@ -18,8 +18,8 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
     return (
         <div className={classes}>
             <div className={styles.callout}>
-                <h1>to view the sprite tiles of a Neo Geo game</h1>
-                <p>choose a C ROM pair from a game's romset in the file dialog</p>
+                <h1>View the sprite tiles of a Neo Geo game</h1>
+                <p>choose a C ROM pair from a game's romset in the file chooser above</p>
                 {!showHelp && (
                     <button className={styles.showHelpButton} onClick={() => setShowHelp(true)}>
                         how?

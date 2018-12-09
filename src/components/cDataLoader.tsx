@@ -67,7 +67,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
         }
 
         if (!areAProperPair(files)) {
-            return setStatusMessage("Please choose a proper pair, see the help");
+            return setStatusMessage('Please choose a proper pair, click the "how?" below');
         }
 
         const fr = new FileReader();

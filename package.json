@@ -1,36 +1,36 @@
 {
-  "name": "gatsby-starter-hello-world",
-  "description": "Gatsby hello world starter",
-  "license": "MIT",
-  "scripts": {
-    "develop": "gatsby develop",
-    "start": "npm run develop",
-    "build": "gatsby build",
-    "serve": "gatsby serve",
-    "type-check": "tsc --noEmit",
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public"
-  },
-  "dependencies": {
-    "classnames": "^2.2.6",
-    "gatsby": "^2.0.33",
-    "gatsby-plugin-react-helmet": "^3.0.4",
-    "gatsby-plugin-typescript": "^2.0.3",
-    "react": "^16.7.0-alpha.2",
-    "react-dom": "^16.7.0-alpha.2",
-    "react-helmet": "^5.2.0"
-  },
-  "devDependencies": {
-    "@types/classnames": "^2.2.6",
-    "@types/react-helmet": "^5.0.7",
-    "gh-pages": "^2.0.1",
-    "husky": "^1.2.0",
-    "prettier": "^1.15.3",
-    "pretty-quick": "^1.8.0",
-    "typescript": "^3.2.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run type-check && pretty-quick --staged"
+    "name": "gatsby-starter-hello-world",
+    "description": "Gatsby hello world starter",
+    "license": "MIT",
+    "scripts": {
+        "develop": "gatsby develop",
+        "start": "npm run develop",
+        "build": "gatsby build",
+        "serve": "gatsby serve",
+        "type-check": "tsc --noEmit",
+        "deploy": "gatsby build --prefix-paths && gh-pages -d public"
+    },
+    "dependencies": {
+        "classnames": "^2.2.6",
+        "gatsby": "^2.0.33",
+        "gatsby-plugin-react-helmet": "^3.0.4",
+        "gatsby-plugin-typescript": "^2.0.3",
+        "react": "^16.7.0-alpha.2",
+        "react-dom": "^16.7.0-alpha.2",
+        "react-helmet": "^5.2.0"
+    },
+    "devDependencies": {
+        "@types/classnames": "^2.2.6",
+        "@types/react-helmet": "^5.0.7",
+        "gh-pages": "^2.0.1",
+        "husky": "^1.2.0",
+        "prettier": "^1.15.3",
+        "pretty-quick": "^1.8.0",
+        "typescript": "^3.2.2"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run type-check && pretty-quick --staged"
+        }
     }
-  }
 }
