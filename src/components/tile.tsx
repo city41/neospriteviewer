@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
 import { CData } from "../interfaces";
 
+import styles from "./tile.module.css";
+
 const TILE_WIDTH = 16;
 const TILE_HEIGHT = 16;
 const CORNER_WIDTH = TILE_WIDTH / 2;
@@ -18,10 +20,10 @@ interface RenderTileProps {
 const step = 256 / 16;
 const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     const value = (i + 1) * step;
-    return [value, value, value, 255];
+    return [value * 0.2, value * 0.8, value, 255];
 });
 
-palette.unshift([255, 0, 0, 255 * 0.25]);
+palette.unshift([255, 240, 230, 255]);
 
 function getPixels(cData: CData, tileIndex: number) {
     const startIndex = tileIndex * 64;
@@ -127,12 +129,17 @@ const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, 
                 const pixelStream = getPixels(cData, index);
 
                 const corners = extractCorners(pixelStream);
-                const tile = renderTile(corners, context);
+                renderTile(corners, context);
+                setTimeout(() => {
+                    if (canvasEl && canvasEl.current) {
+                        canvasEl.current.className = classnames(styles.tile, className, styles.rendered);
+                    }
+                }, 100);
             }
         }
     });
 
-    const classes = classnames(className);
+    const classes = classnames(styles.tile, className);
     return <canvas className={classes} ref={canvasEl} />;
 };
 

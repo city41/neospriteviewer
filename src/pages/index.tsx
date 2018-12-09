@@ -32,8 +32,6 @@ export default () => {
 
     const tileIndices = getTileIndices(cData);
 
-    const tileContainerClasses = classnames(styles.tileContainer, { [styles.hasTiles]: !!tileIndices });
-
     return (
         <div className={styles.root}>
             <Header className={styles.header}>
@@ -41,11 +39,10 @@ export default () => {
             </Header>
 
             {!tileIndices && <NullState />}
-            <div className={tileContainerClasses}>
-                {(tileIndices || []).map((t, i) => (
-                    <Tile className={styles.tile} cData={cData} index={t} />
-                ))}
-            </div>
+            {(tileIndices || []).map((t, i) => (
+                <Tile key={((cData && cData.filename) || "X") + "-" + t} className={styles.tile} cData={cData} index={t} />
+            ))}
+            <div className={styles.fool} />
         </div>
     );
 };

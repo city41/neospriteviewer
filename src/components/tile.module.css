@@ -1,0 +1,9 @@
+.tile {
+    opacity: 0;
+    outline: 1px solid black;
+    transition: opacity 1s;
+}
+
+.rendered {
+    opacity: 1;
+}

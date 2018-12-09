@@ -78,7 +78,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
                 const c1Data = new Uint8Array((isC1File(files[0]) ? fr.result : fr2.result) as ArrayBuffer);
                 const c2Data = new Uint8Array((isC1File(files[1]) ? fr2.result : fr.result) as ArrayBuffer);
 
-                onLoad({ c1Data, c2Data });
+                onLoad({ c1Data, c2Data, filename: files[0].name });
             };
             fr2.readAsArrayBuffer(files[1]);
         };

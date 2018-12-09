@@ -12,20 +12,22 @@
     box-shadow: 4px 6px 10px 0px rgba(168, 168, 168, 0.64);
 }
 
-.tileContainer {
-    opacity: 0;
-    transition: opacity 1s;
-}
-
-.tileContainer.hasTiles {
-    opacity: 1;
-}
-
 .tile {
-    margin: 2px;
+    margin: 16px 0 0 16px;
     display: inline-block;
 
     width: 64px;
     height: 64px;
     image-rendering: pixelated;
+    outline: 1px solid black;
+}
+
+.fool {
+    position: fixed;
+    right: 40px;
+    bottom: 0;
+    width: 38px;
+    height: 56px;
+    background-image: url(/neospriteviewer/fool.png);
+    background-size: cover;
 }
