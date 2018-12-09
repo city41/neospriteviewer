@@ -10,7 +10,8 @@ import styles from "./cDataLoader.module.css";
 
 interface CDataLoaderProps {
     className?: string;
-    onLoad: (cData: CData) => void;
+    onLoad: (cData: CData | null) => void;
+    cData: CData | null;
 }
 
 function getCIndex(fileName: string) {
@@ -49,13 +50,17 @@ function areAProperPair(files: FileList) {
     return maxIndex - minIndex === 1;
 }
 
-const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, onLoad }) => {
+const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, onLoad, cData }) => {
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
     function onFilesChosen(e: React.ChangeEvent<HTMLInputElement>) {
         setStatusMessage(null);
 
         const files = e.target.files;
+
+        if (!files || files.length === 0) {
+            return onLoad(null);
+        }
 
         if (!files || files.length !== 2 || !areCRomFiles(files)) {
             return setStatusMessage("Please choose a pair of C ROM files");
@@ -84,6 +89,11 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
     return (
         <div>
             <input type="file" onChange={onFilesChosen} multiple={true} />
+            {!!cData && (
+                <a className={styles.clearLink} onClick={() => onLoad(null)}>
+                    clear
+                </a>
+            )}
             <span className={styles.errorMessage}>{statusMessage}</span>
         </div>
     );

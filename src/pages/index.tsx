@@ -37,7 +37,7 @@ export default () => {
     return (
         <div className={styles.root}>
             <Header className={styles.header}>
-                <CDataLoader onLoad={setCData} />
+                <CDataLoader onLoad={setCData} cData={cData} />
             </Header>
 
             {!tileIndices && <NullState />}

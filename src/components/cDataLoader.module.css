@@ -1,3 +1,8 @@
+.clearLink {
+    color: grey;
+    cursor: pointer;
+}
+
 .errorMessage {
     color: rgb(255, 0, 50, 0.9);
 }
