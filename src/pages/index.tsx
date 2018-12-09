@@ -16,7 +16,7 @@ function getTileIndices(cData: CData | null) {
     // one byte is 1/4th of 8 pixels, so essentially 2 pixels
     // c1 has half the tile data
     // so... length / (256
-    const numTiles = cData.c1Data.length / (256 / 2) / 2;
+    const numTiles = Math.min(cData.c1Data.length / (256 / 2) / 2, 1500);
 
     console.log(numTiles, "numTiles");
 

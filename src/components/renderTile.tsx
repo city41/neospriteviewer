@@ -17,7 +17,7 @@ const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     return `rgb(${value}, ${value}, ${value})`;
 });
 
-palette.unshift("rgba(0, 0, 0, 0)");
+palette.unshift("rgba(255, 0, 0, 0.2)");
 console.log("palette", palette);
 
 function getPixels(cData: CData, tileIndex: number) {
@@ -32,7 +32,7 @@ function getPixels(cData: CData, tileIndex: number) {
         const plane2 = cData.c2Data[i];
         const plane3 = cData.c2Data[i + 1];
 
-        for (let b = 7; b >= 0; --b) {
+        for (let b = 0; b < 8; ++b) {
             let paletteIndex = 0;
             paletteIndex |= (plane0 >> b) & 1;
             paletteIndex |= ((plane1 >> b) & 1) << 1;
@@ -88,14 +88,14 @@ function divideIntoCorners(pixelStream) {
 
 function formTile(corners) {
     return (
-        <div style={{ border: "1px solid grey", width: PIXEL_SIZE * 16, height: PIXEL_SIZE * 16 }}>
+        <div style={{ width: PIXEL_SIZE * 16, height: PIXEL_SIZE * 16 }}>
             <div key="topRow" style={{ width: 16 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-                {corners[1]}
                 {corners[0]}
+                {corners[1]}
             </div>
             <div key="bottomRow" style={{ width: 16 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-                {corners[3]}
                 {corners[2]}
+                {corners[3]}
             </div>
         </div>
     );
