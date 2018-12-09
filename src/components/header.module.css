@@ -33,3 +33,9 @@
     font-family: sans-serif;
     margin-right: 60px;
 }
+
+@media (max-width: 800px) {
+    .title {
+        display: none;
+    }
+}
