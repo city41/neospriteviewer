@@ -20,10 +20,11 @@ interface RenderTileProps {
 const step = 256 / 16;
 const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     const value = (i + 1) * step;
-    return [value * 0.2, value * 0.8, value, 255];
+    /* return [value * 0.2, value * 0.8, value, 255]; */
+    return [value, value, value, 255];
 });
 
-palette.unshift([255, 240, 230, 255]);
+palette.unshift([255, 220, 220, 255]);
 
 function getPixels(cData: CData, tileIndex: number) {
     const startIndex = tileIndex * 64;
