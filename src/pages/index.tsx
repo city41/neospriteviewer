@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Helmet from "react-helmet";
+import { StaticQuery, graphql } from "gatsby";
 import classnames from "classnames";
 import { setConfig } from "react-hot-loader";
 import { Header } from "../components/header";
@@ -26,6 +28,21 @@ function getTileIndices(cData: CData | null) {
     return new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
 }
 
+const query = graphql`
+    query MetaDataQuery {
+        site {
+            siteMetadata {
+                title
+                keywords
+                description
+                twitterHandle
+            }
+        }
+    }
+`;
+
+const titleImageUrl = "https://city41.github.io/neospriteviewer/fool.png";
+
 export default () => {
     const [cData, setCData] = useState<CData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -33,28 +50,94 @@ export default () => {
     const tileIndices = getTileIndices(cData);
 
     return (
-        <div className={styles.root}>
-            <Header className={styles.header} loading={!!tileIndices && !loaded}>
-                <CDataLoader
-                    onLoad={newCData => {
-                        setLoaded(false);
-                        setCData(newCData);
-                    }}
-                    cData={cData}
-                />
-            </Header>
+        <StaticQuery
+            query={query}
+            render={data => (
+                <>
+                    <Helmet
+                        title={data.site.siteMetadata.title}
+                        meta={[
+                            {
+                                name: "description",
+                                content: data.site.siteMetadata.title
+                            },
+                            {
+                                name: "keywords",
+                                content: data.site.siteMetadata.keywords
+                            },
+                            {
+                                name: "twitter:card",
+                                content: "summary"
+                            },
+                            {
+                                name: "twitter:site",
+                                content: data.site.siteMetadata.twitterHandle
+                            },
+                            {
+                                name: "twitter:title",
+                                content: data.site.siteMetadata.title
+                            },
+                            {
+                                name: "twitter:description",
+                                content: data.site.siteMetadata.description
+                            },
+                            {
+                                name: "twitter:image",
+                                content: titleImageUrl
+                            },
+                            {
+                                name: "og:title",
+                                content: data.site.siteMetadata.title
+                            },
+                            {
+                                name: "og:type",
+                                content: "website"
+                            },
+                            {
+                                name: "og:url",
+                                content: "https://city41.github.io/neospriteviewer"
+                            },
+                            {
+                                name: "og:description",
+                                content: data.site.siteMetadata.description
+                            },
+                            {
+                                name: "og:image",
+                                content: titleImageUrl
+                            },
+                            {
+                                name: "og:title",
+                                content: data.site.siteMetadata.title
+                            }
+                        ]}
+                    >
+                        <html lang="en" />
+                    </Helmet>
+                    <div className={styles.root}>
+                        <Header className={styles.header} loading={!!tileIndices && !loaded}>
+                            <CDataLoader
+                                onLoad={newCData => {
+                                    setLoaded(false);
+                                    setCData(newCData);
+                                }}
+                                cData={cData}
+                            />
+                        </Header>
 
-            {!tileIndices && <NullState />}
-            {(tileIndices || []).map((t, i, a) => (
-                <Tile
-                    key={((cData && cData.filename) || "X") + "-" + t}
-                    className={styles.tile}
-                    cData={cData}
-                    index={t}
-                    onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
-                />
-            ))}
-            <div className={styles.fool} />
-        </div>
+                        {!tileIndices && <NullState />}
+                        {(tileIndices || []).map((t, i, a) => (
+                            <Tile
+                                key={((cData && cData.filename) || "X") + "-" + t}
+                                className={styles.tile}
+                                cData={cData}
+                                index={t}
+                                onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
+                            />
+                        ))}
+                        <div className={styles.fool} />
+                    </div>
+                </>
+            )}
+        />
     );
 };
