@@ -1,5 +1,5 @@
 .nullState {
-    margin: 10%;
+    margin: 10% 10% 0 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -8,7 +8,7 @@
 
 @media (max-width: 800px) {
     .nullState {
-        margin: 20% 10% 10% 10%;
+        margin: 20% 10% 0 10%;
     }
 }
 
@@ -39,15 +39,15 @@
 }
 
 .howToGetAPair {
-    margin-top: 40px;
+    margin: 40px 0;
     max-width: 500px;
     padding: 20px;
-    border: 1px dotted #658291;
     opacity: 0;
     transition: opacity 0.5s;
     font-size: 0.95em;
     height: 0;
     overflow: hidden;
+    background: rgb(101, 130, 145, 0.09);
 }
 
 .howToGetAPair.shown {
