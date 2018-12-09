@@ -3,6 +3,7 @@ import { setConfig } from "react-hot-loader";
 import { Header } from "../components/header";
 import { Tile } from "../components/tile";
 import { CDataLoader } from "../components/cDataLoader";
+import { NullState } from "../components/nullState";
 import { CData } from "../interfaces";
 
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
@@ -13,7 +14,7 @@ import styles from "./index.module.css";
 
 function getTileIndices(cData: CData | null) {
     if (!cData) {
-        return [];
+        return null;
     }
 
     // one byte is 1/4th of 8 pixels, so essentially 2 pixels
@@ -28,15 +29,17 @@ export default () => {
     const [cData, setCData] = useState<CData | null>(null);
     console.log("cData", cData);
 
+    const tileIndices = getTileIndices(cData);
+
+    const body = tileIndices ? tileIndices.map((t, i) => <Tile className={styles.tile} cData={cData} index={t} />) : <NullState />;
+
     return (
         <div className={styles.root}>
             <Header className={styles.header}>
                 <CDataLoader onLoad={setCData} />
             </Header>
 
-            {getTileIndices(cData).map((t, i) => (
-                <Tile className={styles.tile} cData={cData} index={t} />
-            ))}
+            {body}
         </div>
     );
 };

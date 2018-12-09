@@ -12,6 +12,8 @@ interface CDataLoaderProps {
 }
 
 function isC1File(file: File) {
+    const c1regex = /.*C\d.*/g;
+
     const index = file.name[file.name.length - 1];
 
     return !!(parseInt(index, 10) & 1);
