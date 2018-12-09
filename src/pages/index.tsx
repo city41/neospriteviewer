@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import LazyLoad from "react-lazyload";
-import { Tile, TilePlaceholder } from "../components/tile";
+import { Tile } from "../components/tile";
 import { CDataLoader } from "../components/cDataLoader";
 import { CData } from "../interfaces";
 
 import "./index.css";
-
-/* const tiles = new Array(1).fill(1, 0, 15).map((_, i) => i + 70); */
-const tiles = new Array(100).fill(1, 0, 100).map((_, i) => i + 0);
 
 function getTileIndices(cData: CData | null) {
     if (!cData) {
