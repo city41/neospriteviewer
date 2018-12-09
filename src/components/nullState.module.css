@@ -6,10 +6,30 @@
     color: #658291;
 }
 
-.dragSection {
+.callout {
     padding: 20px 40px;
     border: 6px dashed white;
     border-radius: 24px;
+    text-align: center;
+    position: relative;
+}
+
+.showHelpButton {
+    position: absolute;
+    right: 20px;
+    bottom: -16px;
+    font-size: 18px;
+
+    padding: 4px 20px;
+    background-color: #658291;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 4px 6px 10px 0px rgba(168, 168, 168, 0.64);
+}
+
+.dragSection h1 {
+    font-size: 20px;
 }
 
 .howToGetAPair {
