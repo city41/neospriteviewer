@@ -15,16 +15,17 @@ interface RenderTileProps {
     className?: string;
     cData: CData | null;
     index: number;
+    onLoad?: () => void;
 }
 
 const step = 256 / 16;
 const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     const value = (i + 1) * step;
     /* return [value * 0.2, value * 0.8, value, 255]; */
-    return [value, value, value, 255];
+    return [value * 0.8, value * 0.9, value, 255];
 });
 
-palette.unshift([255, 220, 220, 255]);
+palette.unshift([0, 0, 0, 0]);
 
 function getPixels(cData: CData, tileIndex: number) {
     const startIndex = tileIndex * 64;
@@ -114,7 +115,7 @@ function renderTile(corners: number[][][][], context: CanvasRenderingContext2D) 
     });
 }
 
-const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, index }) => {
+const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, index, onLoad }) => {
     if (!cData) return null;
 
     const canvasEl = useRef<HTMLCanvasElement | null>(null);
@@ -131,6 +132,11 @@ const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, 
 
                 const corners = extractCorners(pixelStream);
                 renderTile(corners, context);
+
+                if (onLoad) {
+                    onLoad();
+                }
+
                 setTimeout(() => {
                     if (canvasEl && canvasEl.current) {
                         canvasEl.current.className = classnames(styles.tile, className, styles.rendered);

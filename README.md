@@ -1,12 +1,11 @@
-# gatsby-starter-hello-world
-Starter with the bare essentials needed for a [Gatsby](https://www.gatsbyjs.org/) site.
+# Neo Geo Sprite Viewer
 
-Install this starter (assuming Gatsby is installed) by running from your CLI:
-```
-gatsby new gatsby-site https://github.com/gatsbyjs/gatsby-starter-hello-world
-```
+A website that lets you view a Neo Geo game's sprite tiles.
 
-Or [view the live demo here](https://gatsby-starter-hello-world-demo.netlify.com/).
+It does this by loading the Tile ROM data and extracting out the graphics.
 
-## Running in development
-`gatsby develop`
+![screenshot]()
+
+## Sprite Tile Format
+
+The format is explained here: https://wiki.neogeodev.org/index.php?title=Sprite_graphics_format

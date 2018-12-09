@@ -1,9 +1,7 @@
 .header {
     background-color: black;
-    display: grid;
-    grid-template-columns: 40px max-content auto;
-    column-gap: 10px;
-    grid-template-rows: auto;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     color: #ccc;
 }
@@ -11,8 +9,24 @@
 .logo {
     background-image: url(/neospriteviewer/neogeoLogo.svg);
     background-size: cover;
-    width: 100%;
-    height: 100%;
+    width: 38px;
+    height: 38px;
+}
+
+.logo.spin {
+    animation-name: spin;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .title {

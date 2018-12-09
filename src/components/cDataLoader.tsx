@@ -67,7 +67,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
         }
 
         if (!areAProperPair(files)) {
-            return setStatusMessage('Please choose a proper pair, click the "how?" below');
+            return setStatusMessage("Please choose a proper pair, click the help below");
         }
 
         const fr = new FileReader();
@@ -89,11 +89,6 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
     return (
         <div>
             <input type="file" onChange={onFilesChosen} multiple={true} />
-            {!!cData && (
-                <a className={styles.clearLink} onClick={() => onLoad(null)}>
-                    clear
-                </a>
-            )}
             <span className={styles.errorMessage}>{statusMessage}</span>
         </div>
     );

@@ -28,19 +28,31 @@ function getTileIndices(cData: CData | null) {
 
 export default () => {
     const [cData, setCData] = useState<CData | null>(null);
-    console.log("cData", cData);
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     const tileIndices = getTileIndices(cData);
 
     return (
         <div className={styles.root}>
-            <Header className={styles.header}>
-                <CDataLoader onLoad={setCData} cData={cData} />
+            <Header className={styles.header} loading={!!tileIndices && !loaded}>
+                <CDataLoader
+                    onLoad={newCData => {
+                        setLoaded(false);
+                        setCData(newCData);
+                    }}
+                    cData={cData}
+                />
             </Header>
 
             {!tileIndices && <NullState />}
-            {(tileIndices || []).map((t, i) => (
-                <Tile key={((cData && cData.filename) || "X") + "-" + t} className={styles.tile} cData={cData} index={t} />
+            {(tileIndices || []).map((t, i, a) => (
+                <Tile
+                    key={((cData && cData.filename) || "X") + "-" + t}
+                    className={styles.tile}
+                    cData={cData}
+                    index={t}
+                    onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
+                />
             ))}
             <div className={styles.fool} />
         </div>

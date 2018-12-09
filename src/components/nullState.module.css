@@ -39,6 +39,7 @@
     border: 1px dotted #658291;
     opacity: 0;
     transition: opacity 0.5s;
+    font-size: 0.95em;
 }
 
 .howToGetAPair.shown {

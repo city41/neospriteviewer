@@ -12,6 +12,11 @@
     box-shadow: 4px 6px 10px 0px rgba(168, 168, 168, 0.64);
 }
 
+.spinner {
+    margin-top: 100px;
+    text-align: center;
+}
+
 .tile {
     margin: 16px 0 0 16px;
     display: inline-block;
