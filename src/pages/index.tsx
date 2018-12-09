@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RenderTile } from "../components/renderTile";
+import { Tile } from "../components/tile";
 import { CDataLoader } from "../components/cDataLoader";
 import { CData } from "../interfaces";
 
@@ -16,7 +16,7 @@ function getTileIndices(cData: CData | null) {
     // one byte is 1/4th of 8 pixels, so essentially 2 pixels
     // c1 has half the tile data
     // so... length / (256
-    const numTiles = Math.min(cData.c1Data.length / (256 / 2) / 2, 1500);
+    const numTiles = Math.min(cData.c1Data.length / (256 / 2) / 2, 1000);
 
     console.log(numTiles, "numTiles");
 
@@ -32,8 +32,8 @@ export default () => {
             <h1>A Neo Geo Sprite Tile Viewer</h1>
             <CDataLoader onLoad={setCData} />
 
-            {getTileIndices(cData).map(t => (
-                <RenderTile className="tile" cData={cData} index={t} />
+            {getTileIndices(cData).map((t, i) => (
+                <Tile key={i} className="tile" cData={cData} index={t} />
             ))}
         </div>
     );

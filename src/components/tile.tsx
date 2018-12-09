@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
 import { CData } from "../interfaces";
 
-const PIXEL_SIZE = 4;
+const TILE_WIDTH = 16;
+const TILE_HEIGHT = 16;
+const CORNER_WIDTH = TILE_WIDTH / 2;
+const CORNER_HEIGHT = TILE_HEIGHT / 2;
+
 const PIXEL_STREAM_LENGTH = 16 * 16;
 
 interface RenderTileProps {
@@ -14,10 +18,10 @@ interface RenderTileProps {
 const step = 256 / 16;
 const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     const value = (i + 1) * step;
-    return `rgb(${value}, ${value}, ${value})`;
+    return [value, value, value, 255];
 });
 
-palette.unshift("rgba(255, 0, 0, 0.2)");
+palette.unshift([255, 0, 0, 255 * 0.2]);
 console.log("palette", palette);
 
 function getPixels(cData: CData, tileIndex: number) {
@@ -56,26 +60,16 @@ function buildCorner(pixelStream, startIndex) {
 
             const color = pixelStream[pixelIndex];
 
-            cells.push(
-                <div key={pixelIndex} style={{ display: "inline-block", width: PIXEL_SIZE, height: PIXEL_SIZE, backgroundColor: color }} />
-            );
+            cells.push(color);
         }
 
-        rows.push(
-            <div key={y} style={{ width: 8 * PIXEL_SIZE, height: PIXEL_SIZE }}>
-                {cells}
-            </div>
-        );
+        rows.push(cells);
     }
 
-    return (
-        <div key={startIndex} style={{ display: "inline-block", width: 8 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-            {rows}
-        </div>
-    );
+    return rows;
 }
 
-function divideIntoCorners(pixelStream) {
+function extractCorners(pixelStream) {
     const cornerSize = 8 * 8;
 
     return [
@@ -86,39 +80,57 @@ function divideIntoCorners(pixelStream) {
     ];
 }
 
-function formTile(corners) {
-    return (
-        <div style={{ width: PIXEL_SIZE * 16, height: PIXEL_SIZE * 16 }}>
-            <div key="topRow" style={{ width: 16 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-                {corners[0]}
-                {corners[1]}
-            </div>
-            <div key="bottomRow" style={{ width: 16 * PIXEL_SIZE, height: 8 * PIXEL_SIZE }}>
-                {corners[2]}
-                {corners[3]}
-            </div>
-        </div>
-    );
+function placeData(imageData, corner) {
+    for (let y = 0; y < CORNER_HEIGHT; ++y) {
+        for (let x = 0; x < CORNER_WIDTH; ++x) {
+            const index = (y * CORNER_WIDTH + x) * 4;
+            const color = corner[y][x];
+
+            for (let c = 0; c < 4; ++c) {
+                imageData.data[index + c] = color[c];
+            }
+        }
+    }
 }
 
-const RenderTile: React.StatelessComponent<RenderTileProps> = ({ className, cData, index }) => {
+const CORNER_POSITIONS = [
+    // upper left
+    [0, 0],
+    // upper right
+    [8, 0],
+    // lower left
+    [0, 8],
+    // lower right
+    [8, 8]
+];
+
+function renderTile(corners, context) {
+    corners.forEach((corner, i) => {
+        const imageData = context.createImageData(CORNER_WIDTH, CORNER_HEIGHT);
+        placeData(imageData, corner);
+        context.putImageData(imageData, CORNER_POSITIONS[i][0], CORNER_POSITIONS[i][1]);
+    });
+}
+
+const Tile: React.StatelessComponent<RenderTileProps> = ({ className, cData, index }) => {
     if (!cData) return null;
 
-    const pixelStream = getPixels(cData, index);
+    const canvasEl = useRef(null);
 
-    if (pixelStream.length !== PIXEL_STREAM_LENGTH) {
-        return (
-            <div>
-                whoops, pixelStream should be {PIXEL_STREAM_LENGTH} but is actually {pixelStream.length}
-            </div>
-        );
-    }
+    useEffect(() => {
+        canvasEl.current.width = TILE_WIDTH;
+        canvasEl.current.height = TILE_HEIGHT;
 
-    const corners = divideIntoCorners(pixelStream);
-    const tile = formTile(corners);
+        const context = canvasEl.current.getContext("2d");
+
+        const pixelStream = getPixels(cData, index);
+
+        const corners = extractCorners(pixelStream);
+        const tile = renderTile(corners, context);
+    });
 
     const classes = classnames(className);
-    return <div className={classes}>{tile}</div>;
+    return <canvas className={classes} ref={canvasEl} />;
 };
 
-export { RenderTile };
+export { Tile };
