@@ -12,6 +12,7 @@ interface CDataLoaderProps {
     className?: string;
     onLoad: (cData: CData | null) => void;
     cData: CData | null;
+    statusMessage: string | null;
 }
 
 function getCIndex(fileName: string) {
@@ -52,7 +53,7 @@ function areAProperPair(files: FileList) {
     return maxIndex - minIndex === 1 && !!(minIndex & 1);
 }
 
-const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, onLoad, cData }) => {
+const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, onLoad, cData, statusMessage: statusMessageFromProps }) => {
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
     function onFilesChosen(e: React.ChangeEvent<HTMLInputElement>) {
@@ -91,7 +92,7 @@ const CDataLoader: React.StatelessComponent<CDataLoaderProps> = ({ className, on
     return (
         <div>
             <input type="file" onChange={onFilesChosen} multiple={true} />
-            <span className={styles.errorMessage}>{statusMessage}</span>
+            <span className={styles.errorMessage}>{statusMessage || statusMessageFromProps}</span>
         </div>
     );
 };

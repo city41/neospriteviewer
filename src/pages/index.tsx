@@ -17,15 +17,20 @@ import styles from "./index.module.css";
 
 function getTileIndices(cData: CData | null) {
     if (!cData) {
-        return null;
+        return { tileIndices: null, numTiles: 0, totalTiles: 0 };
     }
 
     // one byte is 1/4th of 8 pixels, so essentially 2 pixels
     // c1 has half the tile data
     // so...
-    const numTiles = process.env.NODE_ENV === "production" ? cData.c1Data.length / (256 / 2 / 2) : 300;
+    /* const numTiles = process.env.NODE_ENV === "production" ? cData.c1Data.length / (256 / 2 / 2) : 300; */
+    const totalTiles = cData.c1Data.length / (256 / 2 / 2);
 
-    return new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
+    const numTiles = Math.min(totalTiles, 1024);
+
+    const tileIndices = new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
+
+    return { tileIndices, numTiles, totalTiles };
 }
 
 const query = graphql`
@@ -47,7 +52,7 @@ export default () => {
     const [cData, setCData] = useState<CData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
 
-    const tileIndices = getTileIndices(cData);
+    const { tileIndices, numTiles, totalTiles } = getTileIndices(cData);
 
     return (
         <StaticQuery
@@ -121,6 +126,11 @@ export default () => {
                                     setCData(newCData);
                                 }}
                                 cData={cData}
+                                statusMessage={
+                                    numTiles < totalTiles
+                                        ? `there are ${totalTiles} tiles in total, but only showing first ${numTiles}`
+                                        : null
+                                }
                             />
                         </Header>
 
