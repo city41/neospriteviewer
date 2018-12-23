@@ -15,6 +15,15 @@ setConfig({ pureSFC: true });
 import "./global.css";
 import styles from "./index.module.css";
 
+function formatWithCommas(n: number): string {
+    if ("toLocaleString" in new Number(n)) {
+        return n.toLocaleString();
+    } else {
+        // if the browser doesn't support it, just fall back to no commas, no big deal
+        return n.toString();
+    }
+}
+
 function getTileIndices(cData: CData | null) {
     if (!cData) {
         return { tileIndices: null, numTiles: 0, totalTiles: 0 };
@@ -128,7 +137,9 @@ export default () => {
                                 cData={cData}
                                 statusMessage={
                                     numTiles < totalTiles
-                                        ? `there are ${totalTiles} tiles in total, but only showing first ${numTiles}`
+                                        ? `there are ${formatWithCommas(
+                                              totalTiles
+                                          )} tiles in total, but only showing first ${formatWithCommas(numTiles)}`
                                         : null
                                 }
                             />
