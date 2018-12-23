@@ -23,7 +23,7 @@ function getTileIndices(cData: CData | null) {
     // one byte is 1/4th of 8 pixels, so essentially 2 pixels
     // c1 has half the tile data
     // so...
-    const numTiles = process.env.NODE_ENV === "production" ? cData.c1Data.length / (256 / 2) / 2 : 300;
+    const numTiles = process.env.NODE_ENV === "production" ? cData.c1Data.length / (256 / 2 / 2) : 300;
 
     return new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
 }
