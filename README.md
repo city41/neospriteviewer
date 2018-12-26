@@ -1,6 +1,6 @@
 # Neo Geo Sprite Viewer
 
-A website that lets you view a Neo Geo game's sprite tiles.
+A website that lets you view a Neo Geo game's sprite tiles. You can view both C ROM sprite tiles and S ROM fix tiles.
 
 It does this by loading the Tile ROM data and extracting out the graphics.
 
