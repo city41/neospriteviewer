@@ -19,7 +19,7 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
         <div className={classes}>
             <div className={styles.callout}>
                 <h1>View the sprite tiles of a Neo Geo game</h1>
-                <p>choose a C ROM pair from a game's romset in the file chooser above</p>
+                <p>choose an S ROM file or a C ROM pair from a game's romset in the file chooser above</p>
                 {!showHelp && (
                     <button className={styles.showHelpButton} onClick={() => setShowHelp(true)}>
                         help
@@ -27,9 +27,23 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                 )}
             </div>
             <div className={helpClasses}>
+                <h2>Where to get these files</h2>
+                <p>
+                    Neo Geo ROMs are usually bundled in a zip file. Unzip a game and you'll find a bunch of files. You are interested in S
+                    files or C files.
+                </p>
+                <h2>How to get an S ROM file</h2>
+                <ul>
+                    <li>Unzip a Neo Geo game</li>
+                    <li>
+                        There will usually be one S file, such as <code>201-s1.s1</code> in Metal Slug or <code>019-s1.rom</code> in League
+                        Bowling
+                    </li>
+                    <li>Choose that file in the file dialog above</li>
+                </ul>
                 <h2>How to get a C ROM file pair</h2>
                 <ul>
-                    <li>Neo Geo ROMs are usually bundled in a zip file. Take a game and unzip it.</li>
+                    <li>Unzip a Neo Geo game</li>
                     <li>
                         There will be at least two C ROM files, such as <code>019-c1.rom</code> and <code>019-c2.rom</code> for League
                         Bowling, or <code>RBFF1_C1.rom</code> and <code>RBFF1_C2.rom</code> for Real Bout Fatal Fury.
@@ -41,7 +55,7 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     Bigger games will have more C ROM file pairs. Real Bout Fatal Fury has C1, C2, C3, C4, C5, C6, C7 and C8 ROMs. You can
                     grab any pair, as long as they go together. C1 and C2 go together, C3 and C4 go together, and so on.
                 </p>
-                <h2>Why are they grey scale?</h2>
+                <h2>Why are the tiles grey scale?</h2>
                 <p>
                     The sprites are stored separate from the color palettes. There's no good way to get the color data from a ROM without
                     running the game. So greyscale was chosen as a neutral palette.

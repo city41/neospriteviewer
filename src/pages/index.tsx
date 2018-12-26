@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import classnames from "classnames";
 import Helmet from "react-helmet";
 import { StaticQuery, graphql } from "gatsby";
-import classnames from "classnames";
 import { setConfig } from "react-hot-loader";
 import { Header } from "../components/header";
-import { Tile } from "../components/tile";
-import { CDataLoader } from "../components/cDataLoader";
+import { CTile } from "../components/cTile";
+import { STile } from "../components/sTile";
+import { DataLoader } from "../components/dataLoader";
 import { NullState } from "../components/nullState";
-import { CData } from "../interfaces";
+import { CData, SData } from "../interfaces";
 
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
 setConfig({ pureSFC: true });
@@ -24,19 +25,23 @@ function formatWithCommas(n: number): string {
     }
 }
 
-function getTileIndices(cData: CData | null) {
-    if (!cData) {
+function getTileIndices(data: CData | SData | null): { tileIndices: number[] | null; numTiles: number; totalTiles: number } {
+    if (!data) {
         return { tileIndices: null, numTiles: 0, totalTiles: 0 };
     }
 
-    // one byte is 1/4th of 8 pixels, so essentially 2 pixels
-    // c1 has half the tile data
-    // so...
-    /* const numTiles = process.env.NODE_ENV === "production" ? cData.c1Data.length / (256 / 2 / 2) : 300; */
-    const totalTiles = cData.c1Data.length / (256 / 2 / 2);
+    let totalTiles: number | null = null;
+
+    if (data.fileType === "C") {
+        // one tile is 128 bytes, half of the tile is in C1,
+        // so total tiles is length divided by (128 / 2)
+        totalTiles = data.c1Data.length / 64;
+    } else {
+        // fix rom tiles are 32 bytes each
+        totalTiles = data.sData.length / 32;
+    }
 
     const numTiles = Math.min(totalTiles, 1024);
-
     const tileIndices = new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
 
     return { tileIndices, numTiles, totalTiles };
@@ -58,10 +63,16 @@ const query = graphql`
 const titleImageUrl = "https://city41.github.io/neospriteviewer/fool.png";
 
 export default () => {
-    const [cData, setCData] = useState<CData | null>(null);
+    const [romData, setData] = useState<CData | SData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
 
-    const { tileIndices, numTiles, totalTiles } = getTileIndices(cData);
+    const { tileIndices, numTiles, totalTiles } = getTileIndices(romData);
+
+    const Tile: React.ComponentType<any> = romData && romData.fileType === "C" ? CTile : STile;
+    const tileClasses = classnames(styles.tile, {
+        [styles.cTile]: romData && romData.fileType === "C",
+        [styles.sTile]: romData && romData.fileType === "S"
+    });
 
     return (
         <StaticQuery
@@ -129,12 +140,12 @@ export default () => {
                     </Helmet>
                     <div className={styles.root}>
                         <Header className={styles.header} loading={!!tileIndices && !loaded}>
-                            <CDataLoader
+                            <DataLoader
                                 onLoad={newCData => {
                                     setLoaded(false);
-                                    setCData(newCData);
+                                    setData(newCData);
                                 }}
-                                cData={cData}
+                                data={data}
                                 statusMessage={
                                     numTiles < totalTiles
                                         ? `there are ${formatWithCommas(
@@ -148,9 +159,9 @@ export default () => {
                         {!tileIndices && <NullState />}
                         {(tileIndices || []).map((t, i, a) => (
                             <Tile
-                                key={((cData && cData.filename) || "X") + "-" + t}
-                                className={styles.tile}
-                                cData={cData}
+                                key={((data && data.filename) || "X") + "-" + t}
+                                className={tileClasses}
+                                data={romData}
                                 index={t}
                                 onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
                             />

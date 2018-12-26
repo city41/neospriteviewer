@@ -11,9 +11,9 @@ const CORNER_HEIGHT = TILE_HEIGHT / 2;
 
 const PIXEL_STREAM_LENGTH = 16 * 16;
 
-interface RenderTileProps {
+interface CTileProps {
     className?: string;
-    cData: CData | null;
+    data: CData | null;
     index: number;
     onLoad?: () => void;
 }
@@ -115,8 +115,8 @@ function renderTile(corners: number[][][][], context: CanvasRenderingContext2D) 
     });
 }
 
-const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, index, onLoad }) => {
-    if (!cData) return null;
+const CTileCmp: React.StatelessComponent<CTileProps> = ({ className, data, index, onLoad }) => {
+    if (!data) return null;
 
     const canvasEl = useRef<HTMLCanvasElement | null>(null);
 
@@ -128,7 +128,7 @@ const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, 
                 canvasEl.current.width = TILE_WIDTH;
                 canvasEl.current.height = TILE_HEIGHT;
 
-                const pixelStream = getPixels(cData, index);
+                const pixelStream = getPixels(data, index);
 
                 const corners = extractCorners(pixelStream);
                 renderTile(corners, context);
@@ -150,10 +150,10 @@ const TileCmp: React.StatelessComponent<RenderTileProps> = ({ className, cData, 
     return <canvas className={classes} ref={canvasEl} />;
 };
 
-let Tile = TileCmp;
+let CTile = CTileCmp;
 
 if (process.env.NODE_ENV === "production") {
-    Tile = React.memo(TileCmp);
+    CTile = React.memo(CTileCmp);
 }
 
-export { Tile };
+export { CTile };

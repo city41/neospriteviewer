@@ -18,13 +18,22 @@
 }
 
 .tile {
-    margin: 16px 0 0 16px;
     display: inline-block;
 
-    width: 64px;
-    height: 64px;
     image-rendering: pixelated;
     outline: 1px solid black;
+}
+
+.cTile {
+    margin: 16px 0 0 16px;
+    width: 64px;
+    height: 64px;
+}
+
+.sTile {
+    margin: 8px 0 0 8px;
+    width: 32px;
+    height: 32px;
 }
 
 .fool {
