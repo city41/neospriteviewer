@@ -55,6 +55,12 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     Bigger games will have more C ROM file pairs. Real Bout Fatal Fury has C1, C2, C3, C4, C5, C6, C7 and C8 ROMs. You can
                     grab any pair, as long as they go together. C1 and C2 go together, C3 and C4 go together, and so on.
                 </p>
+                <h2>What is the difference between C and S?</h2>
+                <p>
+                    The data inside C roms is for the main sprites of the game: the characters, backgrounds, bullets, etc. The data inside
+                    the S roms is for the fix layer. This layer is drawn above all sprites and it never scrolls. So S data is for things
+                    like the current score, number of lives, etc. The "HUD" if you will.
+                </p>
                 <h2>Why are the tiles grey scale?</h2>
                 <p>
                     The sprites are stored separate from the color palettes. There's no good way to get the color data from a ROM without
