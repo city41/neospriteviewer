@@ -21,7 +21,6 @@ interface CTileProps {
 const step = 256 / 16;
 const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
     const value = (i + 1) * step;
-    /* return [value * 0.2, value * 0.8, value, 255]; */
     return [value * 0.8, value * 0.9, value, 255];
 });
 

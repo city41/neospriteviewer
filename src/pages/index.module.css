@@ -17,11 +17,23 @@
     text-align: center;
 }
 
-.tile {
+.tileContainer {
     display: inline-block;
+    position: relative;
+}
 
+.tile {
     image-rendering: pixelated;
     outline: 1px solid black;
+}
+
+.tileIndex {
+    text-align: right;
+    font-size: 0.55rem;
+    position: absolute;
+    right: 0;
+    bottom: -0.47rem;
+    color: #aaa;
 }
 
 .cTile {

@@ -158,13 +158,16 @@ export default () => {
 
                         {!tileIndices && <NullState />}
                         {(tileIndices || []).map((t, i, a) => (
-                            <Tile
-                                key={((data && data.filename) || "X") + "-" + t}
-                                className={tileClasses}
-                                data={romData}
-                                index={t}
-                                onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
-                            />
+                            <div className={styles.tileContainer}>
+                                <Tile
+                                    key={((data && data.filename) || "X") + "-" + t}
+                                    className={tileClasses}
+                                    data={romData}
+                                    index={t}
+                                    onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
+                                />
+                                <div className={styles.tileIndex}>{t}</div>
+                            </div>
                         ))}
                         <div className={styles.fool} />
                     </div>
