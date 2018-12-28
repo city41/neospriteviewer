@@ -1,5 +1,8 @@
 .root {
     margin-top: 40px;
+    height: calc(100vh - 40px);
+    display: grid;
+    grid-template-rows: auto auto;
 }
 
 .header {
@@ -15,6 +18,11 @@
 .spinner {
     margin-top: 100px;
     text-align: center;
+}
+
+.tilesContainer {
+    grid-row: 1;
+    overflow: auto;
 }
 
 .tileContainer {
@@ -56,4 +64,8 @@
     height: 56px;
     background-image: url(/neospriteviewer/fool.png);
     background-size: cover;
+}
+
+.detailedTile {
+    grid-row: 2;
 }

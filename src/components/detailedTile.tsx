@@ -10,11 +10,12 @@ interface DetailedTileProps {
     className?: string;
     data: CData | SData | null;
     index: number;
+    onClose: () => void;
 }
 
 function getBgColor(index: number): string {
     const color = [...palette[index]];
-    color[3] = 0.8;
+    color[3] = 1;
 
     return `rgba(${color.join(",")})`;
 }
@@ -37,7 +38,7 @@ function getRows(indices: number[][]) {
     });
 }
 
-const DetailedTile: React.StatelessComponent<DetailedTileProps> = ({ className, data, index }) => {
+const DetailedTile: React.StatelessComponent<DetailedTileProps> = ({ className, data, index, onClose }) => {
     if (!data || index < 0) {
         return null;
     }
@@ -48,7 +49,11 @@ const DetailedTile: React.StatelessComponent<DetailedTileProps> = ({ className, 
 
     const rows = getRows(indices);
 
-    return <div className={classes}>{rows}</div>;
+    return (
+        <div onClick={onClose} className={classes}>
+            {rows}
+        </div>
+    );
 };
 
 export { DetailedTile };

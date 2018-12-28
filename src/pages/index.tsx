@@ -159,23 +159,30 @@ export default () => {
                             />
                         </Header>
 
-                        {!tileIndices && <NullState />}
-                        {(tileIndices || []).map((t, i, a) => (
-                            <div className={styles.tileContainer} onClick={() => setModalIndex(t)}>
-                                <Tile
-                                    key={((data && data.filename) || "X") + "-" + t}
-                                    className={tileClasses}
-                                    data={romData}
-                                    index={t}
-                                    onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
-                                />
-                                <div className={styles.tileIndex}>{t}</div>
-                            </div>
-                        ))}
+                        <div className={styles.tilesContainer}>
+                            {!tileIndices && <NullState />}
+                            {(tileIndices || []).map((t, i, a) => (
+                                <div className={styles.tileContainer} onClick={() => setModalIndex(t)}>
+                                    <Tile
+                                        key={((data && data.filename) || "X") + "-" + t}
+                                        className={tileClasses}
+                                        data={romData}
+                                        index={t}
+                                        onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
+                                    />
+                                    <div className={styles.tileIndex}>{t}</div>
+                                </div>
+                            ))}
+                        </div>
+                        {modalIndex > -1 && (
+                            <DetailedTile
+                                onClose={() => setModalIndex(-1)}
+                                className={styles.detailedTile}
+                                data={romData}
+                                index={modalIndex}
+                            />
+                        )}
                         <div className={styles.fool} />
-                        <Modal isOpen={modalIndex > -1} onRequestClose={() => setModalIndex(-1)}>
-                            <DetailedTile data={romData} index={modalIndex} />
-                        </Modal>
                     </div>
                 </>
             )}
