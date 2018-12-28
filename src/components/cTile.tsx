@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
 import { CData } from "../interfaces";
+import { palette } from "../palette";
 
 import styles from "./tile.module.css";
 
@@ -18,15 +19,7 @@ interface CTileProps {
     onLoad?: () => void;
 }
 
-const step = 256 / 16;
-const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
-    const value = (i + 1) * step;
-    return [value * 0.8, value * 0.9, value, 255];
-});
-
-palette.unshift([0, 0, 0, 0]);
-
-function getPixels(cData: CData, tileIndex: number) {
+function getPixels(cData: CData, tileIndex: number): number[][] {
     const startIndex = tileIndex * 64;
     const endIndex = (tileIndex + 1) * 64;
 
@@ -115,9 +108,9 @@ function renderTile(corners: number[][][][], context: CanvasRenderingContext2D) 
 }
 
 const CTileCmp: React.StatelessComponent<CTileProps> = ({ className, data, index, onLoad }) => {
-    if (!data) return null;
-
     const canvasEl = useRef<HTMLCanvasElement | null>(null);
+
+    if (!data) return null;
 
     useEffect(() => {
         if (canvasEl && canvasEl.current) {

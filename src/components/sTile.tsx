@@ -1,13 +1,12 @@
 import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
 import { SData } from "../interfaces";
+import { palette } from "../palette";
 
 import styles from "./tile.module.css";
 
 const TILE_WIDTH = 8;
 const TILE_HEIGHT = 8;
-
-const PIXEL_STREAM_LENGTH = 16 * 16;
 
 interface STileProps {
     className?: string;
@@ -15,14 +14,6 @@ interface STileProps {
     index: number;
     onLoad?: () => void;
 }
-
-const step = 256 / 16;
-const palette = new Array(15).fill(1, 0, 15).map((_, i) => {
-    const value = (i + 1) * step;
-    return [value * 0.8, value * 0.9, value, 255];
-});
-
-palette.unshift([0, 0, 0, 0]);
 
 function getPixels(sData: SData, tileIndex: number): number[][][] {
     let startIndex = tileIndex * 32;

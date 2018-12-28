@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Modal from "react-modal";
 import classnames from "classnames";
 import Helmet from "react-helmet";
 import { StaticQuery, graphql } from "gatsby";
@@ -6,6 +7,7 @@ import { setConfig } from "react-hot-loader";
 import { Header } from "../components/header";
 import { CTile } from "../components/cTile";
 import { STile } from "../components/sTile";
+import { DetailedTile } from "../components/detailedTile";
 import { DataLoader } from "../components/dataLoader";
 import { NullState } from "../components/nullState";
 import { CData, SData } from "../interfaces";
@@ -65,6 +67,7 @@ const titleImageUrl = "https://city41.github.io/neospriteviewer/fool.png";
 export default () => {
     const [romData, setData] = useState<CData | SData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
+    const [modalIndex, setModalIndex] = useState<number>(-1);
 
     const { tileIndices, numTiles, totalTiles } = getTileIndices(romData);
 
@@ -158,7 +161,7 @@ export default () => {
 
                         {!tileIndices && <NullState />}
                         {(tileIndices || []).map((t, i, a) => (
-                            <div className={styles.tileContainer}>
+                            <div className={styles.tileContainer} onClick={() => setModalIndex(t)}>
                                 <Tile
                                     key={((data && data.filename) || "X") + "-" + t}
                                     className={tileClasses}
@@ -170,6 +173,9 @@ export default () => {
                             </div>
                         ))}
                         <div className={styles.fool} />
+                        <Modal isOpen={modalIndex > -1} onRequestClose={() => setModalIndex(-1)}>
+                            <DetailedTile data={romData} index={modalIndex} />
+                        </Modal>
                     </div>
                 </>
             )}
