@@ -15,6 +15,7 @@
         "gatsby": "^2.0.33",
         "gatsby-plugin-react-helmet": "^3.0.4",
         "gatsby-plugin-typescript": "^2.0.3",
+        "lodash.zip": "^4.2.0",
         "react": "^16.7.0-alpha.2",
         "react-dom": "^16.7.0-alpha.2",
         "react-helmet": "^5.2.0",
@@ -23,6 +24,7 @@
     },
     "devDependencies": {
         "@types/classnames": "^2.2.6",
+        "@types/lodash.zip": "^4.2.4",
         "@types/react-helmet": "^5.0.7",
         "@types/react-modal": "^3.6.0",
         "@types/react-spinkit": "^3.0.5",

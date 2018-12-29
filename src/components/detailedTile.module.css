@@ -1,15 +1,65 @@
 .detailedTile {
+    display: grid;
+    grid-template-columns: max-content auto;
+    background-color: #d4e3e9;
+    border-top: 1px solid grey;
+}
+
+.detailedTile.cTile {
+    padding: 16px;
+}
+
+.detailedTile.sTile {
+    padding: 8px;
+}
+
+.cellContainer {
     background-color: white;
+    outline: 1px solid black;
+    width: 256px;
+    height: 256px;
+}
+
+.detailedTile.cTile .row {
+    height: 16px;
+}
+
+.detailedTile.sTile .row {
+    height: 32px;
 }
 
 .cell {
     display: inline-block;
-    width: 32px;
-    height: 32px;
     font-size: 9px;
     vertical-align: middle;
-    outline: 1px solid rgba(255, 255, 255, 0.1);
+    outline: 1px solid rgba(180, 200, 255, 0.4);
 }
 
-.column {
+.cTile .cell {
+    width: 16px;
+    height: 16px;
+}
+
+.sTile .cell {
+    width: 32px;
+    height: 32px;
+}
+
+.closeContainer {
+    margin: 16px;
+}
+
+.closeContainer h2 {
+    font-size: 14px;
+    color: #444;
+}
+
+.closeContainer button {
+    margin-right: 4px;
+}
+
+.closeContainer button.closeButton {
+    background-color: transparent;
+    color: #658291;
+    outline: 1px solid #658291;
 }

@@ -35,6 +35,10 @@
     outline: 1px solid black;
 }
 
+.tileContainer.tileSelected .tile {
+    outline: 2px solid #ff5733;
+}
+
 .tileIndex {
     text-align: right;
     font-size: 0.55rem;

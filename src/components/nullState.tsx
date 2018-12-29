@@ -15,13 +15,15 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
         [styles.shown]: showHelp
     });
 
+    const buttonClasses = classnames("button", styles.showHelpButton);
+
     return (
         <div className={classes}>
             <div className={styles.callout}>
                 <h1>View the sprite tiles of a Neo Geo game</h1>
                 <p>choose an S ROM file or a C ROM pair from a game's romset in the file chooser above</p>
                 {!showHelp && (
-                    <button className={styles.showHelpButton} onClick={() => setShowHelp(true)}>
+                    <button className={buttonClasses} onClick={() => setShowHelp(true)}>
                         help
                     </button>
                 )}
@@ -61,10 +63,10 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     the S ROMs is for the fix layer. This layer is drawn above all sprites and it never scrolls. So S data is for things
                     like the current score, number of lives, etc. The "HUD" if you will.
                 </p>
-                <h2>Why are the tiles grey scale?</h2>
+                <h2>Why are the colors so weird?</h2>
                 <p>
                     The sprites are stored separate from the color palettes. There's no good way to get the color data from a ROM without
-                    running the game. So greyscale was chosen as a neutral palette.
+                    running the game. So an alternating blue/yellow palette was chosen as it allows the different colors to stand out.
                 </p>
             </div>
         </div>

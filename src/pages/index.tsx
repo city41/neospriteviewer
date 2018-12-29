@@ -161,21 +161,29 @@ export default () => {
 
                         <div className={styles.tilesContainer}>
                             {!tileIndices && <NullState />}
-                            {(tileIndices || []).map((t, i, a) => (
-                                <div className={styles.tileContainer} onClick={() => setModalIndex(t)}>
-                                    <Tile
-                                        key={((data && data.filename) || "X") + "-" + t}
-                                        className={tileClasses}
-                                        data={romData}
-                                        index={t}
-                                        onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
-                                    />
-                                    <div className={styles.tileIndex}>{t}</div>
-                                </div>
-                            ))}
+                            {(tileIndices || []).map((t, i, a) => {
+                                const tileContainerClasses = classnames(styles.tileContainer, {
+                                    [styles.tileSelected]: i === modalIndex
+                                });
+
+                                return (
+                                    <div className={tileContainerClasses} onClick={() => setModalIndex(t)}>
+                                        <Tile
+                                            key={((data && data.filename) || "X") + "-" + t}
+                                            className={tileClasses}
+                                            data={romData}
+                                            index={t}
+                                            onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
+                                        />
+                                        <div className={styles.tileIndex}>{t}</div>
+                                    </div>
+                                );
+                            })}
                         </div>
                         {modalIndex > -1 && (
                             <DetailedTile
+                                onPrev={() => setModalIndex(Math.max(0, modalIndex - 1))}
+                                onNext={() => setModalIndex(Math.min(numTiles - 1, modalIndex + 1))}
                                 onClose={() => setModalIndex(-1)}
                                 className={styles.detailedTile}
                                 data={romData}

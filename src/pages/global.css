@@ -11,3 +11,14 @@ body,
     background-color: #edf4f7;
     font-family: sans-serif;
 }
+
+.button {
+    font-size: 16px;
+    line-height: 16px;
+    padding: 4px 20px;
+    background-color: #658291;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 4px 6px 10px 0px rgba(168, 168, 168, 0.64);
+}

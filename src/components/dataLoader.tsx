@@ -95,7 +95,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                 const fr2 = new FileReader();
                 fr2.onload = e2 => {
                     const c1Data = new Uint8Array((isC1File(files[0]) ? fr.result : fr2.result) as ArrayBuffer);
-                    const c2Data = new Uint8Array((isC1File(files[1]) ? fr2.result : fr.result) as ArrayBuffer);
+                    const c2Data = new Uint8Array((isC1File(files[1]) ? fr.result : fr2.result) as ArrayBuffer);
 
                     onLoad({ fileType: "C", c1Data, c2Data, filename: files[0].name });
                 };
