@@ -118,7 +118,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                 const sData = new Uint8Array(fr.result as ArrayBuffer);
 
                 if (!isCorrectLength(sData, 32)) {
-                    setStatusMessage("Invalid file, not multiples of 32 bytes");
+                    setStatusMessage("Invalid file, not multiple of 32 bytes");
                 } else {
                     onLoad({ fileType: "S", sData, filename: files[0].name });
                 }
