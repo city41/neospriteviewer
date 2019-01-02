@@ -69,6 +69,10 @@ function areAProperPair(files: FileList) {
     return maxIndex - minIndex === 1 && !!(minIndex & 1);
 }
 
+function isCorrectLength(data: Uint8Array, tileSize: number): boolean {
+    return data.length % tileSize === 0;
+}
+
 const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLoad, statusMessage: statusMessageFromProps }) => {
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
@@ -97,7 +101,11 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                     const c1Data = new Uint8Array((isC1File(files[0]) ? fr.result : fr2.result) as ArrayBuffer);
                     const c2Data = new Uint8Array((isC1File(files[1]) ? fr.result : fr2.result) as ArrayBuffer);
 
-                    onLoad({ fileType: "C", c1Data, c2Data, filename: files[0].name });
+                    if (!isCorrectLength(c1Data, 64) || !isCorrectLength(c2Data, 64)) {
+                        setStatusMessage("Invalid files, not multiples of 64 bytes");
+                    } else {
+                        onLoad({ fileType: "C", c1Data, c2Data, filename: files[0].name });
+                    }
                 };
                 fr2.readAsArrayBuffer(files[1]);
             };
@@ -108,7 +116,12 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
 
             fr.onload = e1 => {
                 const sData = new Uint8Array(fr.result as ArrayBuffer);
-                onLoad({ fileType: "S", sData, filename: files[0].name });
+
+                if (!isCorrectLength(sData, 32)) {
+                    setStatusMessage("Invalid file, not multiples of 32 bytes");
+                } else {
+                    onLoad({ fileType: "S", sData, filename: files[0].name });
+                }
             };
 
             fr.readAsArrayBuffer(files[0]);
