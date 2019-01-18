@@ -33,6 +33,7 @@
 .tile {
     image-rendering: pixelated;
     outline: 1px solid black;
+    cursor: pointer;
 }
 
 .tileContainer.tileSelected .tile {
