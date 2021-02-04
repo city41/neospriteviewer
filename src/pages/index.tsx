@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Modal from "react-modal";
 import classnames from "classnames";
 import Helmet from "react-helmet";
 import { StaticQuery, graphql } from "gatsby";

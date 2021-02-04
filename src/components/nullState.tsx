@@ -68,6 +68,13 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     The sprites are stored separate from the color palettes. There's no good way to get the color data from a ROM without
                     running the game. So an alternating blue/yellow palette was chosen as it allows the different colors to stand out.
                 </p>
+                <p>
+                    For more info on tiles and palettes,{" "}
+                    <a href="https://mattgreer.dev/blog/extracting-neo-geo-emulator-graphics-data-to-create-animated-gifs/#lets-talk-about-the-neo-geo">
+                        this blog post I wrote
+                    </a>{" "}
+                    goes into more detail.
+                </p>
             </div>
         </div>
     );
