@@ -136,7 +136,7 @@ const CTileCmp: React.StatelessComponent<CTileProps> = ({ className, data, index
                 }, 100);
             }
         }
-    });
+    }, []);
 
     const classes = classnames(styles.tile, className);
     return <canvas className={classes} ref={canvasEl} />;

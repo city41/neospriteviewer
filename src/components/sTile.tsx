@@ -102,28 +102,33 @@ const STileCmp: React.StatelessComponent<STileProps> = ({ className, data, index
 
     useEffect(() => {
         if (canvasEl && canvasEl.current) {
+            canvasEl.current.width = TILE_WIDTH;
+            canvasEl.current.height = TILE_HEIGHT;
+
             const context = canvasEl.current.getContext("2d");
 
             if (context) {
-                canvasEl.current.width = TILE_WIDTH;
-                canvasEl.current.height = TILE_HEIGHT;
-
                 const pixelData = getPixels(data, index);
 
-                renderTile(pixelData, context);
-
-                if (onLoad) {
-                    onLoad();
-                }
-
+                // work around what seems to be a bug in Chrome 96
+                // in production, sTiles somehow cause an infinite loop when
+                // renderTile() calls putImageData()
                 setTimeout(() => {
-                    if (canvasEl && canvasEl.current) {
-                        canvasEl.current.className = classnames(styles.tile, className, styles.rendered);
+                    renderTile(pixelData, context);
+
+                    if (onLoad) {
+                        onLoad();
                     }
-                }, 100);
+
+                    setTimeout(() => {
+                        if (canvasEl && canvasEl.current) {
+                            canvasEl.current.className = classnames(styles.tile, className, styles.rendered);
+                        }
+                    }, 100);
+                }, 1);
             }
         }
-    });
+    }, []);
 
     const classes = classnames(styles.tile, className);
     return <canvas className={classes} ref={canvasEl} />;
