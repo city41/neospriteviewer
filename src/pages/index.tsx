@@ -42,7 +42,11 @@ function getTileIndices(data: CData | SData | null): { tileIndices: number[] | n
         totalTiles = data.sData.length / 32;
     }
 
-    const numTiles = Math.min(totalTiles, 1024);
+    // chrome freezes if it tries to load more than about 256 s-tiles.
+    // no idea why, seems like a bug in chrome. hopefully later on can remove this
+    // @ts-ignore
+    const maxTiles = !!window.chrome && data.fileType === "S" ? 256 : 1024;
+    const numTiles = Math.min(totalTiles, maxTiles);
     const tileIndices = new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
 
     return { tileIndices, numTiles, totalTiles };
