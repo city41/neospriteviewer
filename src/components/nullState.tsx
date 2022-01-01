@@ -75,6 +75,11 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     </a>{" "}
                     goes into more detail.
                 </p>
+                <h2>Why do only 256 S tiles load?</h2>
+                <p>
+                    This is to work around a bug in Chrome and Chrome based browsers. If you need to see more, please switch to Firefox.
+                    Hopefully this bug will get fixed one of these days.
+                </p>
             </div>
         </div>
     );
