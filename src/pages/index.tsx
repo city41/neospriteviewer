@@ -168,7 +168,7 @@ export default () => {
                                 return (
                                     <div className={tileContainerClasses} onClick={() => setModalIndex(t)}>
                                         <Tile
-                                            key={((data && data.filename) || "X") + "-" + t}
+                                            key={(romData?.filename ?? "X") + "-" + t}
                                             className={tileClasses}
                                             data={romData}
                                             index={t}

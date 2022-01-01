@@ -77,8 +77,6 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
     function onFilesChosen(e: React.ChangeEvent<HTMLInputElement>) {
-        e.persist();
-
         setStatusMessage(null);
 
         const files = e.target.files;
@@ -108,9 +106,6 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                     } else {
                         onLoad({ fileType: "C", c1Data, c2Data, filename: files[0].name });
                     }
-
-                    // allow choosing the same files multiple times
-                    e.target.value = "";
                 };
                 fr2.readAsArrayBuffer(files[1]);
             };
@@ -127,9 +122,6 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                 } else {
                     onLoad({ fileType: "S", sData, filename: files[0].name });
                 }
-
-                // allow choosing the same files multiple times
-                e.target.value = "";
             };
 
             fr.readAsArrayBuffer(files[0]);
