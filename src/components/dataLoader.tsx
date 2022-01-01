@@ -75,14 +75,30 @@ function isCorrectLength(data: Uint8Array, tileSize: number): boolean {
 
 const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLoad, statusMessage: statusMessageFromProps }) => {
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
+    const [loadCount, setLoadCount] = useState(1);
 
     function onFilesChosen(e: React.ChangeEvent<HTMLInputElement>) {
         setStatusMessage(null);
 
         const files = e.target.files;
+        const target = e.target;
+
+        const _onLoad = (data: CData | SData | null) => {
+            if (data) {
+                onLoad({
+                    ...data,
+                    filename: data.filename + loadCount
+                });
+            } else {
+                onLoad(data);
+            }
+
+            setLoadCount(lc => lc + 1);
+            target.value = "";
+        };
 
         if (!files || files.length === 0) {
-            return onLoad(null);
+            return _onLoad(null);
         }
 
         if (!areCRomFiles(files) && !isAnSRomFile(files)) {
@@ -104,7 +120,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                     if (!isCorrectLength(c1Data, 64) || !isCorrectLength(c2Data, 64)) {
                         setStatusMessage("Invalid files, not multiples of 64 bytes");
                     } else {
-                        onLoad({ fileType: "C", c1Data, c2Data, filename: files[0].name });
+                        _onLoad({ fileType: "C", c1Data, c2Data, filename: files[0].name });
                     }
                 };
                 fr2.readAsArrayBuffer(files[1]);
@@ -120,7 +136,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
                 if (!isCorrectLength(sData, 32)) {
                     setStatusMessage("Invalid file, not multiple of 32 bytes");
                 } else {
-                    onLoad({ fileType: "S", sData, filename: files[0].name });
+                    _onLoad({ fileType: "S", sData, filename: files[0].name });
                 }
             };
 
