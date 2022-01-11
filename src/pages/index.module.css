@@ -19,6 +19,10 @@
     flex: 1;
 }
 
+.paginator {
+    flex: 1;
+}
+
 .skipBlankTiles {
     display: flex;
     flex-direction: row;

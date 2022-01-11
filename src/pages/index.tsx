@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classnames from "classnames";
 import Helmet from "react-helmet";
 import { StaticQuery, graphql } from "gatsby";
@@ -9,6 +9,7 @@ import { STile } from "../components/sTile";
 import { DetailedTile } from "../components/detailedTile";
 import { DataLoader } from "../components/dataLoader";
 import { NullState } from "../components/nullState";
+import { Paginator } from "../components/paginator";
 import { CData, SData } from "../interfaces";
 
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
@@ -17,16 +18,11 @@ setConfig({ pureSFC: true });
 import "./global.css";
 import styles from "./index.module.css";
 
-function formatWithCommas(n: number): string {
-    if ("toLocaleString" in new Number(n)) {
-        return n.toLocaleString();
-    } else {
-        // if the browser doesn't support it, just fall back to no commas, no big deal
-        return n.toString();
-    }
-}
-
-function getTileIndices(data: CData | SData | null): { tileIndices: number[] | null; numTiles: number; totalTiles: number } {
+function getTileIndices(
+    data: CData | SData | null,
+    currentPage: number,
+    pageSize: number
+): { tileIndices: number[] | null; numTiles: number; totalTiles: number } {
     if (!data) {
         return { tileIndices: null, numTiles: 0, totalTiles: 0 };
     }
@@ -42,12 +38,8 @@ function getTileIndices(data: CData | SData | null): { tileIndices: number[] | n
         totalTiles = data.sData.length / 32;
     }
 
-    // chrome freezes if it tries to load more than about 256 s-tiles.
-    // no idea why, seems like a bug in chrome. hopefully later on can remove this
-    // @ts-ignore
-    const maxTiles = !!window.chrome && data.fileType === "S" ? 256 : 1024;
-    const numTiles = Math.min(totalTiles, maxTiles);
-    const tileIndices = new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + 0);
+    const numTiles = Math.min(pageSize, totalTiles, totalTiles - currentPage * pageSize);
+    const tileIndices = new Array(numTiles).fill(1, 0, numTiles).map((_, i) => i + currentPage * pageSize);
 
     return { tileIndices, numTiles, totalTiles };
 }
@@ -88,9 +80,14 @@ export default () => {
     const [romData, setData] = useState<CData | SData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [modalIndex, setModalIndex] = useState<number>(-1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [skipBlankTiles, setSkipBlankTiles] = useState(false);
 
-    const { tileIndices, numTiles, totalTiles } = getTileIndices(romData);
+    // chrome freezes if it tries to load more than about 256 s-tiles.
+    // no idea why, seems like a bug in chrome. hopefully later on can remove this
+    const pageSize = romData?.fileType === "S" && !!(window as any).chrome ? 256 : 1024;
+
+    const { tileIndices, numTiles, totalTiles } = getTileIndices(romData, currentPage, pageSize);
 
     const Tile: React.ComponentType<any> = romData && romData.fileType === "C" ? CTile : STile;
     const tileClasses = classnames(styles.tile, {
@@ -169,16 +166,27 @@ export default () => {
                                 onLoad={newCData => {
                                     setLoaded(false);
                                     setData(newCData);
+                                    setCurrentPage(0);
                                 }}
                                 data={data}
-                                statusMessage={
-                                    numTiles < totalTiles
-                                        ? `there are ${formatWithCommas(
-                                              totalTiles
-                                          )} tiles in total, but only showing first ${formatWithCommas(numTiles)}`
-                                        : null
-                                }
                             />
+                            {numTiles < totalTiles ? (
+                                <Paginator
+                                    className={styles.paginator}
+                                    currentPage={currentPage}
+                                    totalTiles={totalTiles}
+                                    pageSize={pageSize}
+                                    onFirstClick={() => {
+                                        setCurrentPage(0);
+                                    }}
+                                    onPrevClick={() => {
+                                        setCurrentPage(p => p - 1);
+                                    }}
+                                    onNextClick={() => {
+                                        setCurrentPage(p => p + 1);
+                                    }}
+                                />
+                            ) : null}
                             <div className={styles.skipBlankTiles}>
                                 <input
                                     type="checkbox"

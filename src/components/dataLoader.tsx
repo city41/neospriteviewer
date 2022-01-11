@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import classnames from "classnames";
+import React, { ReactNode, useState } from "react";
 import { CData, SData } from "../interfaces";
 
 import { setConfig } from "react-hot-loader";
@@ -12,7 +11,7 @@ interface DataLoaderProps {
     className?: string;
     onLoad: (data: CData | SData | null) => void;
     data: CData | SData | null;
-    statusMessage: string | null;
+    statusMessage?: ReactNode | null;
 }
 
 function getCIndex(fileName: string): number | null {
