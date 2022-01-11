@@ -145,7 +145,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
     }
 
     return (
-        <div>
+        <div className={className}>
             <input type="file" onChange={onFilesChosen} multiple={true} />
             <span className={styles.errorMessage}>{statusMessage || statusMessageFromProps}</span>
         </div>

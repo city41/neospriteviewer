@@ -67,10 +67,28 @@ const query = graphql`
 
 const titleImageUrl = "https://city41.github.io/neospriteviewer/fool.png";
 
+function isCData(romData: CData | SData): romData is CData {
+    return romData.fileType === "C";
+}
+
+function isBlankTile(romData: CData | SData, i: number): boolean {
+    if (isCData(romData)) {
+        const tileDataOdd = romData.c1Data.slice(i * 64, (i + 1) * 64);
+        const tileDataEven = romData.c2Data.slice(i * 64, (i + 1) * 64);
+
+        return tileDataOdd.every(b => b === 0) && tileDataEven.every(b => b === 0);
+    } else {
+        const tileData = romData.sData.slice(i * 32, (i + 1) * 32);
+
+        return tileData.every(b => b === 0);
+    }
+}
+
 export default () => {
     const [romData, setData] = useState<CData | SData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [modalIndex, setModalIndex] = useState<number>(-1);
+    const [skipBlankTiles, setSkipBlankTiles] = useState(false);
 
     const { tileIndices, numTiles, totalTiles } = getTileIndices(romData);
 
@@ -147,6 +165,7 @@ export default () => {
                     <div className={styles.root}>
                         <Header className={styles.header} loading={!!tileIndices && !loaded}>
                             <DataLoader
+                                className={styles.dataLoader}
                                 onLoad={newCData => {
                                     setLoaded(false);
                                     setData(newCData);
@@ -160,6 +179,16 @@ export default () => {
                                         : null
                                 }
                             />
+                            <div className={styles.skipBlankTiles}>
+                                <input
+                                    type="checkbox"
+                                    checked={skipBlankTiles}
+                                    onChange={() => {
+                                        setSkipBlankTiles(sbt => !sbt);
+                                    }}
+                                />
+                                <div>skip blank tiles</div>
+                            </div>
                         </Header>
 
                         <div className={styles.tilesContainer}>
@@ -168,6 +197,10 @@ export default () => {
                                 const tileContainerClasses = classnames(styles.tileContainer, {
                                     [styles.tileSelected]: i === modalIndex
                                 });
+
+                                if (skipBlankTiles && romData && isBlankTile(romData, t)) {
+                                    return null;
+                                }
 
                                 return (
                                     <div className={tileContainerClasses} onClick={() => setModalIndex(t)}>

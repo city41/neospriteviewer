@@ -15,6 +15,21 @@
     box-shadow: 4px 6px 10px 0px rgba(168, 168, 168, 0.64);
 }
 
+.dataLoader {
+    flex: 1;
+}
+
+.skipBlankTiles {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 4px;
+
+    margin: 0 4px;
+
+    font-size: 0.85rem;
+}
+
 .spinner {
     margin-top: 100px;
     text-align: center;
