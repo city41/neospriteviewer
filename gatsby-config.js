@@ -1,5 +1,4 @@
 module.exports = {
-    pathPrefix: "/neospriteviewer",
     siteMetadata: {
         title: "Neo Geo Sprite Viewer",
         keywords: "Neo Geo, retro game dev, retro gaming",

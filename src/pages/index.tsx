@@ -57,7 +57,8 @@ const query = graphql`
     }
 `;
 
-const titleImageUrl = "https://city41.github.io/neospriteviewer/fool.png";
+const mainUrl = "https://newspriteviewer.mattgreer.dev";
+const titleImageUrl = mainUrl + "/fool.png";
 
 function isCData(romData: CData | SData): romData is CData {
     return romData.fileType === "C";
@@ -141,7 +142,7 @@ export default () => {
                             },
                             {
                                 name: "og:url",
-                                content: "https://city41.github.io/neospriteviewer"
+                                content: mainUrl
                             },
                             {
                                 name: "og:description",
