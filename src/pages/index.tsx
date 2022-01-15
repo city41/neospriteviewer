@@ -57,7 +57,7 @@ const query = graphql`
     }
 `;
 
-const mainUrl = "https://newspriteviewer.mattgreer.dev";
+const mainUrl = "https://neospriteviewer.mattgreer.dev";
 const titleImageUrl = mainUrl + "/fool.png";
 
 const REDIRECT_SCRIPT =
