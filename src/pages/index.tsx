@@ -78,12 +78,6 @@ function isBlankTile(romData: CData | SData, i: number): boolean {
 }
 
 export default () => {
-    useEffect(() => {
-        if (typeof window !== "undefined" && !window.location.hostname.toLowerCase().includes("mattgreer.dev")) {
-            window.location.replace(mainUrl);
-        }
-    });
-
     const [romData, setData] = useState<CData | SData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [modalIndex, setModalIndex] = useState<number>(-1);
