@@ -60,6 +60,13 @@ const query = graphql`
 const mainUrl = "https://newspriteviewer.mattgreer.dev";
 const titleImageUrl = mainUrl + "/fool.png";
 
+const REDIRECT_SCRIPT =
+    process.env.NODE_ENV === "production"
+        ? `if (!window.location.hostname.toLowerCase().includes("mattgreer.dev")) {
+	window.location.replace("${mainUrl}");
+}`
+        : "";
+
 function isCData(romData: CData | SData): romData is CData {
     return romData.fileType === "C";
 }
@@ -97,148 +104,151 @@ export default () => {
     });
 
     return (
-        <StaticQuery
-            query={query}
-            render={data => (
-                <>
-                    <Helmet
-                        title={data.site.siteMetadata.title}
-                        meta={[
-                            {
-                                name: "description",
-                                content: data.site.siteMetadata.title
-                            },
-                            {
-                                name: "keywords",
-                                content: data.site.siteMetadata.keywords
-                            },
-                            {
-                                name: "twitter:card",
-                                content: "summary"
-                            },
-                            {
-                                name: "twitter:site",
-                                content: data.site.siteMetadata.twitterHandle
-                            },
-                            {
-                                name: "twitter:title",
-                                content: data.site.siteMetadata.title
-                            },
-                            {
-                                name: "twitter:description",
-                                content: data.site.siteMetadata.description
-                            },
-                            {
-                                name: "twitter:image",
-                                content: titleImageUrl
-                            },
-                            {
-                                name: "og:title",
-                                content: data.site.siteMetadata.title
-                            },
-                            {
-                                name: "og:type",
-                                content: "website"
-                            },
-                            {
-                                name: "og:url",
-                                content: mainUrl
-                            },
-                            {
-                                name: "og:description",
-                                content: data.site.siteMetadata.description
-                            },
-                            {
-                                name: "og:image",
-                                content: titleImageUrl
-                            },
-                            {
-                                name: "og:title",
-                                content: data.site.siteMetadata.title
-                            }
-                        ]}
-                    >
-                        <html lang="en" />
-                    </Helmet>
-                    <div className={styles.root}>
-                        <Header className={styles.header} loading={!!tileIndices && !loaded}>
-                            <DataLoader
-                                className={styles.dataLoader}
-                                onLoad={newCData => {
-                                    setLoaded(false);
-                                    setData(newCData);
-                                    setCurrentPage(0);
-                                }}
-                                data={data}
-                            />
-                            {numTiles < totalTiles ? (
-                                <Paginator
-                                    className={styles.paginator}
-                                    currentPage={currentPage}
-                                    totalTiles={totalTiles}
-                                    pageSize={pageSize}
-                                    onFirstClick={() => {
+        <>
+            <script lang="javascript" dangerouslySetInnerHTML={{ __html: REDIRECT_SCRIPT }} />
+            <StaticQuery
+                query={query}
+                render={data => (
+                    <>
+                        <Helmet
+                            title={data.site.siteMetadata.title}
+                            meta={[
+                                {
+                                    name: "description",
+                                    content: data.site.siteMetadata.title
+                                },
+                                {
+                                    name: "keywords",
+                                    content: data.site.siteMetadata.keywords
+                                },
+                                {
+                                    name: "twitter:card",
+                                    content: "summary"
+                                },
+                                {
+                                    name: "twitter:site",
+                                    content: data.site.siteMetadata.twitterHandle
+                                },
+                                {
+                                    name: "twitter:title",
+                                    content: data.site.siteMetadata.title
+                                },
+                                {
+                                    name: "twitter:description",
+                                    content: data.site.siteMetadata.description
+                                },
+                                {
+                                    name: "twitter:image",
+                                    content: titleImageUrl
+                                },
+                                {
+                                    name: "og:title",
+                                    content: data.site.siteMetadata.title
+                                },
+                                {
+                                    name: "og:type",
+                                    content: "website"
+                                },
+                                {
+                                    name: "og:url",
+                                    content: mainUrl
+                                },
+                                {
+                                    name: "og:description",
+                                    content: data.site.siteMetadata.description
+                                },
+                                {
+                                    name: "og:image",
+                                    content: titleImageUrl
+                                },
+                                {
+                                    name: "og:title",
+                                    content: data.site.siteMetadata.title
+                                }
+                            ]}
+                        >
+                            <html lang="en" />
+                        </Helmet>
+                        <div className={styles.root}>
+                            <Header className={styles.header} loading={!!tileIndices && !loaded}>
+                                <DataLoader
+                                    className={styles.dataLoader}
+                                    onLoad={newCData => {
+                                        setLoaded(false);
+                                        setData(newCData);
                                         setCurrentPage(0);
                                     }}
-                                    onPrevClick={() => {
-                                        setCurrentPage(p => p - 1);
-                                    }}
-                                    onNextClick={() => {
-                                        setCurrentPage(p => p + 1);
-                                    }}
+                                    data={data}
                                 />
-                            ) : null}
-                            <div className={styles.skipBlankTiles}>
-                                <input
-                                    type="checkbox"
-                                    checked={skipBlankTiles}
-                                    onChange={() => {
-                                        setSkipBlankTiles(sbt => !sbt);
-                                    }}
-                                />
-                                <div>skip blank tiles</div>
+                                {numTiles < totalTiles ? (
+                                    <Paginator
+                                        className={styles.paginator}
+                                        currentPage={currentPage}
+                                        totalTiles={totalTiles}
+                                        pageSize={pageSize}
+                                        onFirstClick={() => {
+                                            setCurrentPage(0);
+                                        }}
+                                        onPrevClick={() => {
+                                            setCurrentPage(p => p - 1);
+                                        }}
+                                        onNextClick={() => {
+                                            setCurrentPage(p => p + 1);
+                                        }}
+                                    />
+                                ) : null}
+                                <div className={styles.skipBlankTiles}>
+                                    <input
+                                        type="checkbox"
+                                        checked={skipBlankTiles}
+                                        onChange={() => {
+                                            setSkipBlankTiles(sbt => !sbt);
+                                        }}
+                                    />
+                                    <div>skip blank tiles</div>
+                                </div>
+                            </Header>
+
+                            <div className={styles.tilesContainer}>
+                                {!tileIndices && <NullState />}
+                                {(tileIndices || []).map((t, i, a) => {
+                                    const tileContainerClasses = classnames(styles.tileContainer, {
+                                        [styles.tileSelected]: i === modalIndex
+                                    });
+
+                                    if (skipBlankTiles && romData && isBlankTile(romData, t)) {
+                                        return null;
+                                    }
+
+                                    return (
+                                        <div className={tileContainerClasses} onClick={() => setModalIndex(t)}>
+                                            <Tile
+                                                key={(romData?.filename ?? "X") + "-" + t}
+                                                className={tileClasses}
+                                                data={romData}
+                                                index={t}
+                                                onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
+                                            />
+                                            <div className={styles.tileIndex}>{t}</div>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        </Header>
-
-                        <div className={styles.tilesContainer}>
-                            {!tileIndices && <NullState />}
-                            {(tileIndices || []).map((t, i, a) => {
-                                const tileContainerClasses = classnames(styles.tileContainer, {
-                                    [styles.tileSelected]: i === modalIndex
-                                });
-
-                                if (skipBlankTiles && romData && isBlankTile(romData, t)) {
-                                    return null;
-                                }
-
-                                return (
-                                    <div className={tileContainerClasses} onClick={() => setModalIndex(t)}>
-                                        <Tile
-                                            key={(romData?.filename ?? "X") + "-" + t}
-                                            className={tileClasses}
-                                            data={romData}
-                                            index={t}
-                                            onLoad={i === a.length - 1 ? () => setLoaded(true) : undefined}
-                                        />
-                                        <div className={styles.tileIndex}>{t}</div>
-                                    </div>
-                                );
-                            })}
+                            {modalIndex > -1 && (
+                                <DetailedTile
+                                    onPrev={() => setModalIndex(Math.max(0, modalIndex - 1))}
+                                    onNext={() => setModalIndex(Math.min(numTiles - 1, modalIndex + 1))}
+                                    onClose={() => setModalIndex(-1)}
+                                    className={styles.detailedTile}
+                                    data={romData}
+                                    index={modalIndex}
+                                />
+                            )}
+                            <div className={styles.fool} />
                         </div>
-                        {modalIndex > -1 && (
-                            <DetailedTile
-                                onPrev={() => setModalIndex(Math.max(0, modalIndex - 1))}
-                                onNext={() => setModalIndex(Math.min(numTiles - 1, modalIndex + 1))}
-                                onClose={() => setModalIndex(-1)}
-                                className={styles.detailedTile}
-                                data={romData}
-                                index={modalIndex}
-                            />
-                        )}
-                        <div className={styles.fool} />
-                    </div>
-                </>
-            )}
-        />
+                    </>
+                )}
+            />
+        </>
     );
 };
