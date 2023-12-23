@@ -5,7 +5,7 @@
     "scripts": {
         "develop": "gatsby develop",
         "start": "npm run develop",
-        "build": "gatsby build",
+        "build": "NODE_OPTIONS=--openssl-legacy-provider gatsby build",
         "serve": "gatsby serve",
         "type-check": "tsc --noEmit",
         "deploy": "gatsby build --prefix-paths && gh-pages -d public"
