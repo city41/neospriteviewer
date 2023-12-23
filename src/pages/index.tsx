@@ -91,9 +91,6 @@ export default () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [skipBlankTiles, setSkipBlankTiles] = useState(false);
 
-    // chrome freezes if it tries to load more than about 256 s-tiles.
-    // no idea why, seems like a bug in chrome. hopefully later on can remove this
-    // const pageSize = romData?.fileType === "S" && !!(window as any).chrome ? 256 : 1024;
     const pageSize = 1024;
 
     const { tileIndices, numTiles, totalTiles } = getTileIndices(romData, currentPage, pageSize);

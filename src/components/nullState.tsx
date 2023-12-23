@@ -42,6 +42,10 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                         Bowling
                     </li>
                     <li>Choose that file in the file dialog above</li>
+
+                    <p>
+                        <b>Note</b> that newer games (from KOF99 onward) don't have an S ROM file. Those games can't be viewed.
+                    </p>
                 </ul>
                 <h2>How to get a C ROM file pair</h2>
                 <ul>
@@ -57,6 +61,10 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     Bigger games will have more C ROM file pairs. Real Bout Fatal Fury has C1, C2, C3, C4, C5, C6, C7 and C8 ROMs. You can
                     grab any pair, as long as they go together. C1 and C2 go together, C3 and C4 go together, and so on.
                 </p>
+                <p>
+                    <b>Note</b> that later games encrypted the C ROM data. If the tiles all look like television noise, that's what that is.
+                    This viewer cannot decrypt the files.
+                </p>
                 <h2>What is the difference between C and S?</h2>
                 <p>
                     The data inside C ROMs is for the main sprites of the game: the characters, backgrounds, bullets, etc. The data inside
@@ -65,7 +73,7 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                 </p>
                 <h2>Why are the colors so weird?</h2>
                 <p>
-                    The sprites are stored separate from the color palettes. There's no good way to get the color data from a ROM without
+                    The tiles are stored separate from the color palettes. There's no good way to get the color data from a ROM without
                     running the game. So an alternating blue/yellow palette was chosen as it allows the different colors to stand out.
                 </p>
                 <p>
@@ -74,11 +82,6 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                         this blog post I wrote
                     </a>{" "}
                     goes into more detail.
-                </p>
-                <h2>Why do only 256 S tiles load?</h2>
-                <p>
-                    This is to work around a bug in Chrome and Chrome based browsers. If you need to see more, please switch to Firefox.
-                    Hopefully this bug will get fixed one of these days.
                 </p>
             </div>
         </div>
