@@ -42,11 +42,10 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                         Bowling
                     </li>
                     <li>Choose that file in the file dialog above</li>
-
-                    <p>
-                        <b>Note</b> that newer games (from KOF99 onward) don't have an S ROM file. Those games can't be viewed.
-                    </p>
                 </ul>
+                <p>
+                    <b>Note</b> that newer games (from KOF99 onward) don't have an S ROM file. Those games can't be viewed.
+                </p>
                 <h2>How to get a C ROM file pair</h2>
                 <ul>
                     <li>Unzip a Neo Geo game</li>
