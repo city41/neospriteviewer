@@ -37,7 +37,10 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     Neo Geo ROMs are usually bundled in a zip file. Unzip a game and you'll find a bunch of files. You are interested in S
                     files or C files.
                 </p>
-                <p>Or if you are using a CD game, you are after SPR or FIX files inside the ISO.</p>
+                <p>
+                    Or if you are using a CD game, you are after SPR or FIX files inside the ISO. If you have an actual CD, usually loading
+                    it into your PC's CD drive is enough to get at the files.
+                </p>
                 <h2>How to get an S ROM file</h2>
                 <ul>
                     <li>Unzip a Neo Geo game</li>
