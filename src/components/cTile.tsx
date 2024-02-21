@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
-import { CData } from "../interfaces";
+import { CData, SPRData } from "../interfaces";
 import { palette } from "../palette";
 
 import styles from "./tile.module.css";
@@ -10,35 +10,58 @@ const TILE_HEIGHT = 16;
 const CORNER_WIDTH = TILE_WIDTH / 2;
 const CORNER_HEIGHT = TILE_HEIGHT / 2;
 
-const PIXEL_STREAM_LENGTH = 16 * 16;
-
 interface CTileProps {
     className?: string;
-    data: CData | null;
+    data: CData | SPRData | null;
     index: number;
     onLoad?: () => void;
 }
 
-function getPixels(cData: CData, tileIndex: number): number[][] {
-    const startIndex = tileIndex * 64;
-    const endIndex = (tileIndex + 1) * 64;
-
+function getPixels(romData: CData | SPRData, tileIndex: number): number[][] {
     const pixels = [];
 
-    for (let i = startIndex; i < endIndex; i += 2) {
-        const plane0 = cData.c1Data[i];
-        const plane1 = cData.c1Data[i + 1];
-        const plane2 = cData.c2Data[i];
-        const plane3 = cData.c2Data[i + 1];
+    if (romData.fileType === "C") {
+        const startIndex = tileIndex * 64;
+        const endIndex = (tileIndex + 1) * 64;
 
-        for (let b = 0; b < 8; ++b) {
-            let paletteIndex = 0;
-            paletteIndex |= (plane0 >> b) & 1;
-            paletteIndex |= ((plane1 >> b) & 1) << 1;
-            paletteIndex |= ((plane2 >> b) & 1) << 2;
-            paletteIndex |= ((plane3 >> b) & 1) << 3;
+        for (let i = startIndex; i < endIndex; i += 2) {
+            const plane0 = romData.c1Data[i];
+            const plane1 = romData.c1Data[i + 1];
+            const plane2 = romData.c2Data[i];
+            const plane3 = romData.c2Data[i + 1];
 
-            pixels.push(palette[paletteIndex]);
+            for (let b = 0; b < 8; ++b) {
+                let paletteIndex = 0;
+                paletteIndex |= (plane0 >> b) & 1;
+                paletteIndex |= ((plane1 >> b) & 1) << 1;
+                paletteIndex |= ((plane2 >> b) & 1) << 2;
+                paletteIndex |= ((plane3 >> b) & 1) << 3;
+
+                pixels.push(palette[paletteIndex]);
+            }
+        }
+    } else {
+        const startIndex = tileIndex * 128;
+        const endIndex = (tileIndex + 1) * 128;
+
+        // the planes follow the order 1/0/3/2
+        // https://wiki.neogeodev.org/index.php?title=Sprite_graphics_format
+
+        for (let i = startIndex; i < endIndex; i += 4) {
+            const plane1 = romData.sprData[i];
+            const plane0 = romData.sprData[i + 1];
+            const plane3 = romData.sprData[i + 2];
+            const plane2 = romData.sprData[i + 3];
+
+            for (let b = 0; b < 8; ++b) {
+                let paletteIndex = 0;
+                paletteIndex |= (plane0 >> b) & 1;
+                paletteIndex |= ((plane1 >> b) & 1) << 1;
+                paletteIndex |= ((plane2 >> b) & 1) << 2;
+                paletteIndex |= ((plane3 >> b) & 1) << 3;
+
+                pixels.push(palette[paletteIndex]);
+            }
         }
     }
 

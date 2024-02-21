@@ -1,6 +1,6 @@
-import { SData, CData } from "./interfaces";
+import { SData, CData, SPRData, FIXData } from "./interfaces";
 
-function getIndexStream(data: CData, tileIndex: number): number[] {
+function getCIndexStream(data: CData, tileIndex: number): number[] {
     const startIndex = tileIndex * 64;
     const endIndex = (tileIndex + 1) * 64;
 
@@ -11,6 +11,35 @@ function getIndexStream(data: CData, tileIndex: number): number[] {
         const plane1 = data.c1Data[i + 1];
         const plane2 = data.c2Data[i];
         const plane3 = data.c2Data[i + 1];
+
+        for (let b = 0; b < 8; ++b) {
+            let paletteIndex = 0;
+            paletteIndex |= (plane0 >> b) & 1;
+            paletteIndex |= ((plane1 >> b) & 1) << 1;
+            paletteIndex |= ((plane2 >> b) & 1) << 2;
+            paletteIndex |= ((plane3 >> b) & 1) << 3;
+
+            indices.push(paletteIndex);
+        }
+    }
+
+    return indices;
+}
+
+function getSPRIndexStream(data: SPRData, tileIndex: number): number[] {
+    const startIndex = tileIndex * 128;
+    const endIndex = (tileIndex + 1) * 128;
+
+    const indices = [];
+
+    // the planes follow the order 1/0/3/2
+    // https://wiki.neogeodev.org/index.php?title=Sprite_graphics_format
+
+    for (let i = startIndex; i < endIndex; i += 4) {
+        const plane1 = data.sprData[i];
+        const plane0 = data.sprData[i + 1];
+        const plane3 = data.sprData[i + 2];
+        const plane2 = data.sprData[i + 3];
 
         for (let b = 0; b < 8; ++b) {
             let paletteIndex = 0;
@@ -86,13 +115,27 @@ function cornersToTile(corners: number[][][]): number[][] {
 }
 
 function getIndexedCData(data: CData, tileIndex: number): number[][] {
-    const indexStream = getIndexStream(data, tileIndex);
+    const indexStream = getCIndexStream(data, tileIndex);
+    const corners = extractCorners(indexStream);
+
+    return cornersToTile(corners);
+}
+function getIndexedSPRData(data: SPRData, tileIndex: number): number[][] {
+    const indexStream = getSPRIndexStream(data, tileIndex);
     const corners = extractCorners(indexStream);
 
     return cornersToTile(corners);
 }
 
 function getIndexedSData(data: SData, tileIndex: number): number[][] {
+    return getIndexedFixLayerData(data.sData, tileIndex);
+}
+
+function getIndexedFIXData(data: FIXData, tileIndex: number): number[][] {
+    return getIndexedFixLayerData(data.fixData, tileIndex);
+}
+
+function getIndexedFixLayerData(data: Uint8Array, tileIndex: number): number[][] {
     let startIndex = tileIndex * 32;
     const endIndex = (tileIndex + 1) * 32;
 
@@ -100,7 +143,7 @@ function getIndexedSData(data: SData, tileIndex: number): number[][] {
 
     // get column A
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = data.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -110,7 +153,7 @@ function getIndexedSData(data: SData, tileIndex: number): number[][] {
 
     // get column B
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = data.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -120,7 +163,7 @@ function getIndexedSData(data: SData, tileIndex: number): number[][] {
 
     // get column C
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = data.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -130,7 +173,7 @@ function getIndexedSData(data: SData, tileIndex: number): number[][] {
 
     // get column D
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = data.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -141,10 +184,14 @@ function getIndexedSData(data: SData, tileIndex: number): number[][] {
     return indices;
 }
 
-export function getIndexedData(data: CData | SData, tileIndex: number): number[][] {
+export function getIndexedData(data: CData | SData | SPRData | FIXData, tileIndex: number): number[][] {
     if (data.fileType === "C") {
         return getIndexedCData(data, tileIndex);
-    } else {
+    } else if (data.fileType === "S") {
         return getIndexedSData(data, tileIndex);
+    } else if (data.fileType === "SPR") {
+        return getIndexedSPRData(data, tileIndex);
+    } else {
+        return getIndexedFIXData(data, tileIndex);
     }
 }

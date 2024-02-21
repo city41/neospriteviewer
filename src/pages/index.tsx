@@ -10,7 +10,7 @@ import { DetailedTile } from "../components/detailedTile";
 import { DataLoader } from "../components/dataLoader";
 import { NullState } from "../components/nullState";
 import { Paginator } from "../components/paginator";
-import { CData, SData } from "../interfaces";
+import { CData, FIXData, SData, SPRData } from "../interfaces";
 
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
 setConfig({ pureSFC: true });
@@ -19,7 +19,7 @@ import "./global.css";
 import styles from "./index.module.css";
 
 function getTileIndices(
-    data: CData | SData | null,
+    data: CData | SData | SPRData | FIXData | null,
     currentPage: number,
     pageSize: number
 ): { tileIndices: number[] | null; numTiles: number; totalTiles: number } {
@@ -33,9 +33,13 @@ function getTileIndices(
         // one tile is 128 bytes, half of the tile is in C1,
         // so total tiles is length divided by (128 / 2)
         totalTiles = data.c1Data.length / 64;
-    } else {
+    } else if (data.fileType === "S") {
         // fix rom tiles are 32 bytes each
         totalTiles = data.sData.length / 32;
+    } else if (data.fileType === "SPR") {
+        totalTiles = data.sprData.length / 128;
+    } else {
+        totalTiles = data.fixData.length / 32;
     }
 
     const numTiles = Math.min(pageSize, totalTiles, totalTiles - currentPage * pageSize);
@@ -67,25 +71,48 @@ const REDIRECT_SCRIPT =
 }`
         : "";
 
-function isCData(romData: CData | SData): romData is CData {
+function isCData(romData: CData | SData | SPRData | FIXData): romData is CData {
     return romData.fileType === "C";
 }
 
-function isBlankTile(romData: CData | SData, i: number): boolean {
+function isSData(romData: CData | SData | SPRData | FIXData): romData is SData {
+    return romData.fileType === "S";
+}
+
+function isSPRData(romData: CData | SData | SPRData | FIXData): romData is SPRData {
+    return romData.fileType === "SPR";
+}
+
+function isBlankTile(romData: CData | SData | SPRData | FIXData, i: number): boolean {
     if (isCData(romData)) {
         const tileDataOdd = romData.c1Data.slice(i * 64, (i + 1) * 64);
         const tileDataEven = romData.c2Data.slice(i * 64, (i + 1) * 64);
 
         return tileDataOdd.every(b => b === 0) && tileDataEven.every(b => b === 0);
-    } else {
+    } else if (isSData(romData)) {
         const tileData = romData.sData.slice(i * 32, (i + 1) * 32);
+
+        return tileData.every(b => b === 0);
+    } else if (isSPRData(romData)) {
+        const tileData = romData.sprData.slice(i * 128, (i + 1) * 128);
+
+        return tileData.every(b => b === 0);
+    } else {
+        const tileData = romData.fixData.slice(i * 32, (i + 1) * 32);
 
         return tileData.every(b => b === 0);
     }
 }
 
+const fileTypeToCmp: Record<"C" | "S" | "SPR" | "FIX", React.ComponentType<any>> = {
+    C: CTile,
+    S: STile,
+    SPR: CTile,
+    FIX: STile
+};
+
 export default () => {
-    const [romData, setData] = useState<CData | SData | null>(null);
+    const [romData, setData] = useState<CData | SData | SPRData | FIXData | null>(null);
     const [loaded, setLoaded] = useState<boolean>(false);
     const [modalIndex, setModalIndex] = useState<number>(-1);
     const [currentPage, setCurrentPage] = useState(0);
@@ -95,10 +122,12 @@ export default () => {
 
     const { tileIndices, numTiles, totalTiles } = getTileIndices(romData, currentPage, pageSize);
 
-    const Tile: React.ComponentType<any> = romData && romData.fileType === "C" ? CTile : STile;
+    const Tile: React.ComponentType<any> | null = romData && fileTypeToCmp[romData.fileType];
     const tileClasses = classnames(styles.tile, {
         [styles.cTile]: romData && romData.fileType === "C",
-        [styles.sTile]: romData && romData.fileType === "S"
+        [styles.sprTile]: romData && romData.fileType === "SPR",
+        [styles.sTile]: romData && romData.fileType === "S",
+        [styles.fixTile]: romData && romData.fileType === "FIX"
     });
 
     return (
@@ -214,7 +243,7 @@ export default () => {
                                         [styles.tileSelected]: i === modalIndex
                                     });
 
-                                    if (skipBlankTiles && romData && isBlankTile(romData, t)) {
+                                    if (Tile === null || (skipBlankTiles && romData && isBlankTile(romData, t))) {
                                         return null;
                                     }
 

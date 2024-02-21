@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import { CData, SData } from "../interfaces";
+import { CData, FIXData, SData, SPRData } from "../interfaces";
 import { palette } from "../palette";
 import { getIndexedData } from "../indexedData";
 
@@ -8,7 +8,7 @@ import styles from "./detailedTile.module.css";
 
 interface DetailedTileProps {
     className?: string;
-    data: CData | SData | null;
+    data: CData | SData | SPRData | FIXData | null;
     index: number;
     onPrev: () => void;
     onNext: () => void;
@@ -57,7 +57,9 @@ const DetailedTileCmp: React.StatelessComponent<DetailedTileProps> = ({ classNam
 
     const classes = classnames(styles.detailedTile, className, {
         [styles.cTile]: data.fileType === "C",
-        [styles.sTile]: data.fileType === "S"
+        [styles.sprTile]: data.fileType === "SPR",
+        [styles.sTile]: data.fileType === "S",
+        [styles.fixTile]: data.fileType === "FIX"
     });
 
     const indices = getIndexedData(data, index);

@@ -21,7 +21,10 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
         <div className={classes}>
             <div className={styles.callout}>
                 <h1>View the sprite tiles of a Neo Geo game</h1>
-                <p>choose an S ROM file or a C ROM pair from a game's romset in the file chooser above</p>
+                <p>
+                    choose an S ROM file or a C ROM pair from a game's romset, or an SPR or FIX file from a CD game's ISO in the file
+                    chooser above
+                </p>
                 {!showHelp && (
                     <button className={buttonClasses} onClick={() => setShowHelp(true)}>
                         help
@@ -54,6 +57,18 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                         Bowling, or <code>RBFF1_C1.rom</code> and <code>RBFF1_C2.rom</code> for Real Bout Fatal Fury.
                     </li>
                     <li>Choose those two files in the file dialog above</li>
+                </ul>
+                <h2>How to get an SPR file</h2>
+                <ul>
+                    <li>Mount the CD game's ISO (how to do this depends on your operating system)</li>
+                    <li>Copy out whatever .spr files from the ISO you are interested in onto your hard drive</li>
+                    <li>Choose that .spr file in the dialog above</li>
+                </ul>
+                <h2>How to get a FIX file</h2>
+                <ul>
+                    <li>Mount the CD game's ISO (how to do this depends on your operating system)</li>
+                    <li>Copy out whatever .fix files from the ISO you are interested in onto your hard drive</li>
+                    <li>Choose that .fix file in the dialog above</li>
                 </ul>
 
                 <p>

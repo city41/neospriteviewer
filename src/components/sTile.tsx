@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import classnames from "classnames";
-import { SData } from "../interfaces";
+import { FIXData, SData } from "../interfaces";
 import { palette } from "../palette";
 
 import styles from "./tile.module.css";
@@ -10,12 +10,12 @@ const TILE_HEIGHT = 8;
 
 interface STileProps {
     className?: string;
-    data: SData | null;
+    data: SData | FIXData | null;
     index: number;
     onLoad?: () => void;
 }
 
-function getPixels(sData: SData, tileIndex: number): number[][][] {
+function getPixels(data: Uint8Array, tileIndex: number): number[][][] {
     let startIndex = tileIndex * 32;
     const endIndex = (tileIndex + 1) * 32;
 
@@ -23,7 +23,7 @@ function getPixels(sData: SData, tileIndex: number): number[][][] {
 
     // get column A
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = sData.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -36,7 +36,7 @@ function getPixels(sData: SData, tileIndex: number): number[][][] {
 
     // get column B
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = sData.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -49,7 +49,7 @@ function getPixels(sData: SData, tileIndex: number): number[][][] {
 
     // get column C
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = sData.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -62,7 +62,7 @@ function getPixels(sData: SData, tileIndex: number): number[][][] {
 
     // get column D
     for (let i = 0; i < 8; ++i) {
-        const pixelPair = sData.sData[startIndex++];
+        const pixelPair = data[startIndex++];
         const rightPixelIndex = (pixelPair >> 4) & 0xf;
         const leftPixelIndex = pixelPair & 0xf;
 
@@ -108,7 +108,8 @@ const STileCmp: React.StatelessComponent<STileProps> = ({ className, data, index
             const context = canvasEl.current.getContext("2d");
 
             if (context) {
-                const pixelData = getPixels(data, index);
+                const fixLayerData = data.fileType === "S" ? data.sData : data.fixData;
+                const pixelData = getPixels(fixLayerData, index);
 
                 // work around what seems to be a bug in Chrome 96
                 // in production, sTiles somehow cause an infinite loop when

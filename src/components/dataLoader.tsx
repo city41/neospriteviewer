@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import { CData, SData } from "../interfaces";
+import { CData, FIXData, SData, SPRData } from "../interfaces";
 
 import { setConfig } from "react-hot-loader";
 // @ts-ignore: the typing for setConfig doesn't have this prop but it does work
@@ -9,7 +9,7 @@ import styles from "./dataLoader.module.css";
 
 interface DataLoaderProps {
     className?: string;
-    onLoad: (data: CData | SData | null) => void;
+    onLoad: (data: CData | SData | SPRData | FIXData | null) => void;
     data: CData | SData | null;
     statusMessage?: ReactNode | null;
 }
@@ -52,6 +52,14 @@ function isAnSRomFile(files: FileList): boolean {
     return files.length === 1 && !!getSIndex(files[0].name);
 }
 
+function isAnSPRFile(files: FileList): boolean {
+    return files.length === 1 && files[0].name.toLowerCase().endsWith(".spr");
+}
+
+function isAFIXFile(files: FileList): boolean {
+    return files.length === 1 && files[0].name.toLowerCase().endsWith(".fix");
+}
+
 function areAProperPair(files: FileList) {
     const firstIndex = getCIndex(files[0].name);
     const secondIndex = getCIndex(files[1].name);
@@ -82,7 +90,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
         const files = e.target.files;
         const target = e.target;
 
-        const _onLoad = (data: CData | SData | null) => {
+        const _onLoad = (data: CData | SData | SPRData | FIXData | null) => {
             if (data) {
                 onLoad({
                     ...data,
@@ -98,10 +106,6 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
 
         if (!files || files.length === 0) {
             return _onLoad(null);
-        }
-
-        if (!areCRomFiles(files) && !isAnSRomFile(files)) {
-            return setStatusMessage("Please choose a pair of C ROM files or an S ROM file");
         }
 
         if (areCRomFiles(files)) {
@@ -126,7 +130,7 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
             };
 
             fr.readAsArrayBuffer(files[0]);
-        } else {
+        } else if (isAnSRomFile(files)) {
             const fr = new FileReader();
 
             fr.onload = e1 => {
@@ -140,6 +144,36 @@ const DataLoader: React.StatelessComponent<DataLoaderProps> = ({ className, onLo
             };
 
             fr.readAsArrayBuffer(files[0]);
+        } else if (isAnSPRFile(files)) {
+            const fr = new FileReader();
+
+            fr.onload = e1 => {
+                const sprData = new Uint8Array(fr.result as ArrayBuffer);
+
+                if (!isCorrectLength(sprData, 128)) {
+                    setStatusMessage("Invalid file, not multiple of 128 bytes");
+                } else {
+                    _onLoad({ fileType: "SPR", sprData: sprData, filename: files[0].name });
+                }
+            };
+
+            fr.readAsArrayBuffer(files[0]);
+        } else if (isAFIXFile(files)) {
+            const fr = new FileReader();
+
+            fr.onload = e1 => {
+                const fixData = new Uint8Array(fr.result as ArrayBuffer);
+
+                if (!isCorrectLength(fixData, 128)) {
+                    setStatusMessage("Invalid file, not multiple of 32 bytes");
+                } else {
+                    _onLoad({ fileType: "FIX", fixData: fixData, filename: files[0].name });
+                }
+            };
+
+            fr.readAsArrayBuffer(files[0]);
+        } else {
+            return setStatusMessage("Please choose a pair of C ROM files, an S ROM file, or an SPR file");
         }
     }
 

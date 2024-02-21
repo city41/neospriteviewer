@@ -71,3 +71,4 @@ public
 
 # binary neo files
 *.spr
+*.fix

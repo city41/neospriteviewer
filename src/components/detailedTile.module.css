@@ -5,11 +5,13 @@
     border-top: 1px solid grey;
 }
 
-.detailedTile.cTile {
+.detailedTile.cTile,
+.detailedTile.sprTile {
     padding: 16px;
 }
 
-.detailedTile.sTile {
+.detailedTile.sTile,
+.detailedTile.fixTile {
     padding: 8px;
 }
 
@@ -20,11 +22,13 @@
     height: 256px;
 }
 
-.detailedTile.cTile .row {
+.detailedTile.cTile .row,
+.detailedTile.sprTile .row {
     height: 16px;
 }
 
-.detailedTile.sTile .row {
+.detailedTile.sTile .row,
+.detailedTile.fixTile {
     height: 32px;
 }
 
@@ -35,12 +39,14 @@
     outline: 1px solid rgba(180, 200, 255, 0.4);
 }
 
-.cTile .cell {
+.cTile .cell,
+.sprTile .cell {
     width: 16px;
     height: 16px;
 }
 
-.sTile .cell {
+.sTile .cell,
+.fixTile .cell {
     width: 32px;
     height: 32px;
 }
