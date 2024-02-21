@@ -37,6 +37,7 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     Neo Geo ROMs are usually bundled in a zip file. Unzip a game and you'll find a bunch of files. You are interested in S
                     files or C files.
                 </p>
+                <p>Or if you are using a CD game, you are after SPR or FIX files inside the ISO.</p>
                 <h2>How to get an S ROM file</h2>
                 <ul>
                     <li>Unzip a Neo Geo game</li>
@@ -58,19 +59,6 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     </li>
                     <li>Choose those two files in the file dialog above</li>
                 </ul>
-                <h2>How to get an SPR file</h2>
-                <ul>
-                    <li>Mount the CD game's ISO (how to do this depends on your operating system)</li>
-                    <li>Copy out whatever .spr files from the ISO you are interested in onto your hard drive</li>
-                    <li>Choose that .spr file in the dialog above</li>
-                </ul>
-                <h2>How to get a FIX file</h2>
-                <ul>
-                    <li>Mount the CD game's ISO (how to do this depends on your operating system)</li>
-                    <li>Copy out whatever .fix files from the ISO you are interested in onto your hard drive</li>
-                    <li>Choose that .fix file in the dialog above</li>
-                </ul>
-
                 <p>
                     Bigger games will have more C ROM file pairs. Real Bout Fatal Fury has C1, C2, C3, C4, C5, C6, C7 and C8 ROMs. You can
                     grab any pair, as long as they go together. C1 and C2 go together, C3 and C4 go together, and so on.
@@ -79,12 +67,28 @@ const NullState: React.StatelessComponent<NullStateProps> = ({ className }) => {
                     <b>Note</b> that later games encrypted the C ROM data. If the tiles all look like television noise, that's what that is.
                     This viewer cannot decrypt the files.
                 </p>
+                <h2>How to get an SPR file from a CD game</h2>
+                <ul>
+                    <li>Mount the CD game's ISO (how to do this depends on your operating system)</li>
+                    <li>Copy out whatever .spr files from the ISO you are interested in onto your hard drive</li>
+                    <li>Choose that .spr file in the dialog above</li>
+                </ul>
+                <p>Bigger games will have more than one .spr file. Just choose whichever one you want to look at.</p>
+                <h2>How to get a FIX file from a CD game</h2>
+                <ul>
+                    <li>Mount the CD game's ISO (how to do this depends on your operating system)</li>
+                    <li>Copy out whatever .fix files from the ISO you are interested in onto your hard drive</li>
+                    <li>Choose that .fix file in the dialog above</li>
+                </ul>
+
                 <h2>What is the difference between C and S?</h2>
                 <p>
                     The data inside C ROMs is for the main sprites of the game: the characters, backgrounds, bullets, etc. The data inside
                     the S ROMs is for the fix layer. This layer is drawn above all sprites and it never scrolls. So S data is for things
                     like the current score, number of lives, etc. The "HUD" if you will.
                 </p>
+                <h2>What are SPR and FIX files?</h2>
+                <p>SPR files are the same as C files, but for CD games. FIX files are the same as S files, but for CD games.</p>
                 <h2>Why are the colors so weird?</h2>
                 <p>
                     The tiles are stored separate from the color palettes. There's no good way to get the color data from a ROM without
